@@ -119,7 +119,6 @@ function applyTheme() {
 }
 
 // ** الدوال الجديدة لعرض تفاصيل المنتج **
-
 // دالة لجلب وعرض تفاصيل المنتج
 async function fetchAndDisplayProductDetails(productId) {
     if (!currentUserId || !productId) {
@@ -144,16 +143,22 @@ async function fetchAndDisplayProductDetails(productId) {
 
         // عرض المعلومات الأساسية
         productNameElement.textContent = productData.name || 'منتج غير معروف';
-        productPriceElement.textContent = `السعر: $${(productData.price || 0).toFixed(2)}`;
         productCategoryElement.textContent = `الفئة: ${productData.category || 'غير مصنفة'}`;
         productDescriptionShortElement.textContent = productData.description || 'لا يوجد وصف قصير لهذا المنتج.';
+        
+        // **منطق إخفاء السعر إذا كان صفرًا أو غير موجودًا**
+        const productPrice = productData.price;
+        if (productPrice !== undefined && productPrice !== null && productPrice > 0) {
+            productPriceElement.textContent = `السعر: $${productPrice.toFixed(2)}`;
+            productPriceElement.classList.remove('hidden');
+        } else {
+            productPriceElement.classList.add('hidden');
+        }
+
 
         // **تعديل هنا: استخدام الصورة الرئيسية كخلفية لـ body**
         if (productData.imageUrl) {
             document.body.style.backgroundImage = `url('${productData.imageUrl}')`;
-            document.body.style.backgroundSize = 'cover';
-            document.body.style.backgroundPosition = 'center';
-            document.body.style.backgroundAttachment = 'fixed';
         } else {
             document.body.style.backgroundImage = 'none';
         }
@@ -329,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (user) {
                 currentUserId = user.uid;
-                if (userIdDisplay) userIdDisplay.textContent = `هوية المستخدم: ${currentUserId}`;
+                if (userIdDisplay) userId.textContent = `هوية المستخدم: ${currentUserId}`;
                 
                 const urlParams = new URLSearchParams(window.location.search);
                 productId = urlParams.get('id');
@@ -346,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     await signInAnonymously(auth);
                 } catch (authError) {
                     console.error("خطأ في تسجيل الدخول (مجهول):", authError);
-                    if (userIdDisplay) userIdDisplay.textContent = `فشل المصادقة: ${authError.message}`;
+                    if (userIdDisplay) userId.textContent = `فشل المصادقة: ${authError.message}`;
                    errorMessage.classList.remove('hidden');
                     loadingMessage.classList.add('hidden');
                     productDetailsContent.classList.add('hidden');
