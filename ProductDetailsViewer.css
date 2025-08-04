@@ -22,8 +22,10 @@
             background-color: var(--bg-light);
             color: var(--text-dark);
             transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative; /* لإعداد الطبقة الشفافة */
         }
         
+        /* طبقة شفافة لتسهيل قراءة النصوص على صورة الخلفية */
         body::before {
             content: "";
             position: fixed;
@@ -39,37 +41,38 @@
             z-index: -1;
             transition: opacity 0.3s ease;
         }
+        
+        body.dark-mode::before {
+            opacity: 0.2; /* زيادة الشفافية قليلاً في الوضع الداكن */
+        }
 
         /* أنماط المحتوى الرئيسي ليكون فوق الخلفية */
         .container {
             position: relative;
             z-index: 1;
         }
-
-        /* أنماط الوضع الليلي */
-        body.dark-mode {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-        }
-
+        
+        /* تحسين مظهر المحتوى في الوضع الداكن */
         body.dark-mode .container {
-             /* جعل المحتوى شفافاً قليلاً في الوضع الليلي لتحسين الرؤية */
              background-color: rgba(17, 24, 39, 0.7); 
              border-radius: 0.75rem;
+             padding: 1.5rem;
+             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+             color: var(--text-light);
         }
 
-        /* الأنماط القديمة المعدلة لتتناسب مع التصميم الجديد */
+        /* أنماط الأقسام الديناميكية الجديدة (بدون بطاقات) */
         .dynamic-section-container {
-            background-color: var(--card-light);
-            border-radius: 0.75rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             padding: 1.5rem;
             margin-top: 2rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         body.dark-mode .dynamic-section-container {
-            background-color: var(--card-dark);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            background-color: rgba(55, 65, 81, 0.9);
+            color: var(--text-light);
         }
 
         .dynamic-section-container h3 {
@@ -82,4 +85,23 @@
             display: flex;
             align-items: center;
         }
-        /* ... باقي الأنماط كما كانت مع إزالة الأنماط الخاصة بالبطاقات القديمة ... */
+
+        body.dark-mode .dynamic-section-container h3 {
+            color: var(--light-red);
+            border-color: var(--border-dark);
+        }
+
+        /* أنماط القائمة المنسدلة */
+        .dropdown-menu {
+            /* ... الأنماط القديمة ... */
+            opacity: 0;
+            pointer-events: none;
+            /* ... */
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* ... باقي الأنماط كما كانت ... */
