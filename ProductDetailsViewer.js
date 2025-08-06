@@ -146,15 +146,14 @@ async function fetchAndDisplayProductDetails(productId) {
         productCategoryElement.textContent = `الفئة: ${productData.category || 'غير مصنفة'}`;
         productDescriptionShortElement.textContent = productData.description || 'لا يوجد وصف قصير لهذا المنتج.';
         
-        // **منطق إخفاء السعر إذا كان صفرًا أو غير موجودًا**
+        // **منطق إخفاء السعر إذا كانت القيمة غير محددة فقط**
         const productPrice = productData.price;
-        if (productPrice !== undefined && productPrice !== null && productPrice > 0) {
+        if (productPrice !== undefined && productPrice !== null) {
             productPriceElement.textContent = `السعر: $${productPrice.toFixed(2)}`;
             productPriceElement.classList.remove('hidden');
         } else {
             productPriceElement.classList.add('hidden');
         }
-
 
         // **تعديل هنا: استخدام الصورة الرئيسية كخلفية لـ body**
         if (productData.imageUrl) {
@@ -331,10 +330,17 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Firebase Auth State Listener
     onAuthStateChanged(auth, async (user) => {
+        alert("بدء التحقق من حالة المصادقة...");
         try {
             if (user) {
+                alert("المستخدم موجود. معرف المستخدم هو: " + user.uid);
                 currentUserId = user.uid;
-                if (userIdDisplay) userId.textContent = `هوية المستخدم: ${currentUserId}`;
+                if (userIdDisplay) {
+                    alert("عنصر userIdDisplay موجود. سيتم تحديث النص.");
+                    userIdDisplay.textContent = `هوية المستخدم: ${currentUserId}`;
+                } else {
+                    alert("خطأ: عنصر userIdDisplay غير موجود.");
+                }
                 
                 const urlParams = new URLSearchParams(window.location.search);
                 productId = urlParams.get('id');
@@ -347,11 +353,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     errorMessage.querySelector('p').textContent = 'لم يتم تحديد معرّف المنتج في الرابط.';
                 }
             } else {
+                alert("المستخدم غير موجود. سيتم محاولة تسجيل الدخول كمجهول.");
                 try {
                     await signInAnonymously(auth);
                 } catch (authError) {
+                    alert("فشل تسجيل الدخول كمجهول. الخطأ هو: " + authError.message);
                     console.error("خطأ في تسجيل الدخول (مجهول):", authError);
-                    if (userIdDisplay) userId.textContent = `فشل المصادقة: ${authError.message}`;
+                    if (userIdDisplay) {
+                        userIdDisplay.textContent = `فشل المصادقة: ${authError.message}`;
+                    }
                    errorMessage.classList.remove('hidden');
                     loadingMessage.classList.add('hidden');
                     productDetailsContent.classList.add('hidden');
@@ -359,6 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } catch (initialError) {
+            alert("حدث خطأ عام غير متوقع: " + initialError.message);
             console.error("خطأ عام في تهيئة الصفحة:", initialError);
             errorMessage.classList.remove('hidden');
             loadingMessage.classList.add('hidden');
