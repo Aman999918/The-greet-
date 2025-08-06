@@ -146,15 +146,14 @@ async function fetchAndDisplayProductDetails(productId) {
         productCategoryElement.textContent = `الفئة: ${productData.category || 'غير مصنفة'}`;
         productDescriptionShortElement.textContent = productData.description || 'لا يوجد وصف قصير لهذا المنتج.';
         
-        // **منطق إخفاء السعر إذا كان صفرًا أو غير موجودًا**
+        // **منطق إخفاء السعر إذا كانت القيمة غير محددة فقط**
         const productPrice = productData.price;
-        if (productPrice !== undefined && productPrice !== null && productPrice > 0) {
+        if (productPrice !== undefined && productPrice !== null) {
             productPriceElement.textContent = `السعر: $${productPrice.toFixed(2)}`;
             productPriceElement.classList.remove('hidden');
         } else {
             productPriceElement.classList.add('hidden');
         }
-
 
         // **تعديل هنا: استخدام الصورة الرئيسية كخلفية لـ body**
         if (productData.imageUrl) {
