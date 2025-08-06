@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (user) {
                 currentUserId = user.uid;
-                if (userIdDisplay) userId.textContent = `هوية المستخدم: ${currentUserId}`;
+                if (userIdDisplay) userIdDisplay.textContent = `هوية المستخدم: ${currentUserId}`;
                 
                 const urlParams = new URLSearchParams(window.location.search);
                 productId = urlParams.get('id');
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     await signInAnonymously(auth);
                 } catch (authError) {
                     console.error("خطأ في تسجيل الدخول (مجهول):", authError);
-                    if (userIdDisplay) userId.textContent = `فشل المصادقة: ${authError.message}`;
+                    if (userIdDisplay) userIdDisplay.textContent = `فشل المصادقة: ${authError.message}`;
                    errorMessage.classList.remove('hidden');
                     loadingMessage.classList.add('hidden');
                     productDetailsContent.classList.add('hidden');
@@ -365,4 +365,4 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessage.querySelector('p').textContent = `حدث خطأ غير متوقع: ${initialError.message}`;
         }
     });
-});
+}); 
