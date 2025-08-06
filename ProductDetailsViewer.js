@@ -146,14 +146,15 @@ async function fetchAndDisplayProductDetails(productId) {
         productCategoryElement.textContent = `الفئة: ${productData.category || 'غير مصنفة'}`;
         productDescriptionShortElement.textContent = productData.description || 'لا يوجد وصف قصير لهذا المنتج.';
         
-        // **منطق إخفاء السعر إذا كانت القيمة غير محددة فقط**
+        // **منطق إخفاء السعر إذا كان صفرًا أو غير موجودًا**
         const productPrice = productData.price;
-        if (productPrice !== undefined && productPrice !== null) {
+        if (productPrice !== undefined && productPrice !== null && productPrice > 0) {
             productPriceElement.textContent = `السعر: $${productPrice.toFixed(2)}`;
             productPriceElement.classList.remove('hidden');
         } else {
             productPriceElement.classList.add('hidden');
         }
+
 
         // **تعديل هنا: استخدام الصورة الرئيسية كخلفية لـ body**
         if (productData.imageUrl) {
@@ -333,10 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (user) {
                 currentUserId = user.uid;
-                // ** تعديل هنا: التأكد من وجود العنصر قبل الوصول إليه **
-                if (userIdDisplay) {
-                    userIdDisplay.textContent = `هوية المستخدم: ${currentUserId}`;
-                }
+                if (userIdDisplay) userId.textContent = `هوية المستخدم: ${currentUserId}`;
                 
                 const urlParams = new URLSearchParams(window.location.search);
                 productId = urlParams.get('id');
@@ -353,10 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     await signInAnonymously(auth);
                 } catch (authError) {
                     console.error("خطأ في تسجيل الدخول (مجهول):", authError);
-                    // ** تعديل هنا: التأكد من وجود العنصر قبل الوصول إليه **
-                    if (userIdDisplay) {
-                        userIdDisplay.textContent = `فشل المصادقة: ${authError.message}`;
-                    }
+                    if (userIdDisplay) userId.textContent = `فشل المصادقة: ${authError.message}`;
                    errorMessage.classList.remove('hidden');
                     loadingMessage.classList.add('hidden');
                     productDetailsContent.classList.add('hidden');
@@ -371,4 +366,4 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessage.querySelector('p').textContent = `حدث خطأ غير متوقع: ${initialError.message}`;
         }
     });
-}); 
+});
