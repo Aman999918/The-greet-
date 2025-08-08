@@ -20,7 +20,7 @@
         body {
             font-family: sans-serif;
             background-color: var(--bg-light);
-            color: var(--text-dark);
+            color: var(--text-dark); /* النص الأساسي داكن في الوضع العادي */
             transition: background-color 0.3s ease, color 0.3s ease;
             position: relative; /* لإعداد الطبقة الشفافة */
         }
@@ -58,7 +58,7 @@
              border-radius: 0.75rem;
              padding: 1.5rem;
              box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-             color: var(--text-light);
+             color: var(--text-light); /* لون النص أبيض في الوضع الليلي */
         }
 
         /* أنماط الأقسام الديناميكية الجديدة (بدون بطاقات) */
@@ -68,11 +68,12 @@
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 0.75rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            color: var(--text-dark); /* لون النص داكن في الوضع العادي */
         }
 
         body.dark-mode .dynamic-section-container {
             background-color: rgba(55, 65, 81, 0.9);
-            color: var(--text-light);
+            color: var(--text-light); /* لون النص فاتح في الوضع الليلي */
         }
 
         .dynamic-section-container h3 {
