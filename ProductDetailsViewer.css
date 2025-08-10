@@ -19,10 +19,15 @@
 
         body {
             font-family: sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark); /* النص الأساسي داكن في الوضع العادي */
+            background-color: var(--bg-dark);
+            color: var(--text-light);
             transition: background-color 0.3s ease, color 0.3s ease;
             position: relative; /* لإعداد الطبقة الشفافة */
+        }
+        
+        body:not(.dark-mode) {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
         }
         
         /* طبقة شفافة لتسهيل قراءة النصوص على صورة الخلفية */
@@ -37,13 +42,13 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            opacity: 0.1; /* يمكن تعديل درجة الشفافية هنا */
+            opacity: 0.2; /* زيادة الشفافية قليلاً في الوضع الداكن */
             z-index: -1;
             transition: opacity 0.3s ease;
         }
         
-        body.dark-mode::before {
-            opacity: 0.2; /* زيادة الشفافية قليلاً في الوضع الداكن */
+        body:not(.dark-mode)::before {
+            opacity: 0.1; /* تقليل الشفافية في الوضع الفاتح */
         }
 
         /* أنماط المحتوى الرئيسي ليكون فوق الخلفية */
@@ -53,43 +58,43 @@
         }
         
         /* تحسين مظهر المحتوى في الوضع الداكن */
-        body.dark-mode .container {
-             background-color: rgba(17, 24, 39, 0.7); 
+        body:not(.dark-mode) .container {
+             background-color: rgba(255, 255, 255, 0.7); 
              border-radius: 0.75rem;
              padding: 1.5rem;
-             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-             color: var(--text-light); /* لون النص أبيض في الوضع الليلي */
+             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+             color: var(--text-dark); /* سيصبح لون النص الأساسي أبيض */
         }
 
         /* أنماط الأقسام الديناميكية الجديدة (بدون بطاقات) */
         .dynamic-section-container {
             padding: 1.5rem;
             margin-top: 2rem;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(55, 65, 81, 0.9);
             border-radius: 0.75rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            color: var(--text-dark); /* لون النص داكن في الوضع العادي */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            color: var(--text-light); /* لون النص داكن في الوضع العادي */
         }
 
-        body.dark-mode .dynamic-section-container {
-            background-color: rgba(55, 65, 81, 0.9);
-            color: var(--text-light); /* لون النص فاتح في الوضع الليلي */
+        body:not(.dark-mode) .dynamic-section-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--text-dark); /* لون النص فاتح في الوضع الليلي */
         }
 
         .dynamic-section-container h3 {
             font-size: 1.5rem;
             font-weight: bold;
-            color: var(--primary-red);
+            color: var(--light-red);
             margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-dark);
             padding-bottom: 0.75rem;
             display: flex;
             align-items: center;
         }
 
-        body.dark-mode .dynamic-section-container h3 {
-            color: var(--light-red);
-            border-color: var(--border-dark);
+        body:not(.dark-mode) .dynamic-section-container h3 {
+            color: var(--primary-red);
+            border-color: var(--border-light);
         }
 
         /* أنماط القائمة المنسدلة */
@@ -106,3 +111,4 @@
         }
         
         /* ... باقي الأنماط كما كانت ... */
+    </style>
