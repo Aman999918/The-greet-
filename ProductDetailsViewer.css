@@ -1,108 +1,112 @@
 /* أنماط CSS المعدلة */
 :root {
-            --primary-red: #A30000;
-            --dark-red: #8B0000;
-            --light-red: #CD3333;
-            --primary-blue: #2563EB;
-            --dark-blue: #1E40AF;
-            --light-blue: #8ab4f8;
-            --text-dark: #1f2937;
-            --text-light: #d1d5db;
-            --bg-light: #f3f4f6;
-            --bg-dark: #111827;
-            --card-light: #ffffff;
-            --card-dark: #374151;
-            --border-light: #e5e7eb;
-            --border-dark: #4b5563;
-            --green-success: #28a745;
-        }
+    --primary-red: #A30000;
+    --dark-red: #8B0000;
+    --light-red: #CD3333;
+    --primary-blue: #2563EB;
+    --dark-blue: #1E40AF;
+    --light-blue: #8ab4f8;
+    --text-dark: #1f2937;
+    --text-light: #d1d5db;
+    --bg-light: #f3f4f6;
+    --bg-dark: #111827;
+    --card-light: #ffffff;
+    --card-dark: #374151;
+    --border-light: #e5e7eb;
+    --border-dark: #4b5563;
+    --green-success: #28a745;
+}
 
-        body {
-            font-family: sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark); /* النص الأساسي داكن في الوضع العادي */
-            transition: background-color 0.3s ease, color 0.3s ease;
-            position: relative; /* لإعداد الطبقة الشفافة */
-        }
-        
-        /* طبقة شفافة لتسهيل قراءة النصوص على صورة الخلفية */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: var(--body-bg-image, none);
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            opacity: 0.1; /* يمكن تعديل درجة الشفافية هنا */
-            z-index: -1;
-            transition: opacity 0.3s ease;
-        }
-        
-        body.dark-mode::before {
-            opacity: 0.2; /* زيادة الشفافية قليلاً في الوضع الداكن */
-        }
+body {
+    font-family: sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+}
 
-        /* أنماط المحتوى الرئيسي ليكون فوق الخلفية */
-        .container {
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* تحسين مظهر المحتوى في الوضع الداكن */
-        body.dark-mode .container {
-             background-color: rgba(17, 24, 39, 0.7); 
-             border-radius: 0.75rem;
-             padding: 1.5rem;
-             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-             color: var(--text-light); /* لون النص أبيض في الوضع الليلي */
-        }
+body.dark-mode {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+}
 
-        /* أنماط الأقسام الديناميكية الجديدة (بدون بطاقات) */
-        .dynamic-section-container {
-            padding: 1.5rem;
-            margin-top: 2rem;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 0.75rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            color: var(--text-dark); /* لون النص داكن في الوضع العادي */
-        }
+/* نمط الحاوية الجديدة للبطاقة الموحدة */
+.single-card-container {
+    background-color: var(--card-light);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    color: var(--text-dark); /* لون النص داكن في الوضع العادي */
+}
+body.dark-mode .single-card-container {
+    background-color: var(--card-dark);
+    color: var(--text-light); /* لون النص فاتح في الوضع الليلي */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
 
-        body.dark-mode .dynamic-section-container {
-            background-color: rgba(55, 65, 81, 0.9);
-            color: var(--text-light); /* لون النص فاتح في الوضع الليلي */
-        }
+/* أنماط الأقسام الديناميكية الآن داخل البطاقة الموحدة */
+.single-card-container h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-red);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+body.dark-mode .single-card-container h3 {
+    color: var(--light-red);
+    border-color: var(--border-dark);
+}
 
-        .dynamic-section-container h3 {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-red);
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--border-light);
-            padding-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-        }
+/* أنماط إضافية خاصة بالمحتوى الداخلي */
+.single-card-container p {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.description-line-heading,
+.description-line-highlight,
+.viewer-image-grid,
+.viewer-info-card {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.viewer-info-item {
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-light);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+body.dark-mode .viewer-info-item {
+    background-color: var(--bg-dark);
+    border-color: var(--border-dark);
+}
+.viewer-info-item .key {
+    font-weight: bold;
+    color: var(--text-dark);
+}
+body.dark-mode .viewer-info-item .key {
+    color: var(--text-light);
+}
+.viewer-info-item .value {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
 
-        body.dark-mode .dynamic-section-container h3 {
-            color: var(--light-red);
-            border-color: var(--border-dark);
-        }
-
-        /* أنماط القائمة المنسدلة */
-        .dropdown-menu {
-            /* ... الأنماط القديمة ... */
-            opacity: 0;
-            pointer-events: none;
-            /* ... */
-        }
-
-        .dropdown-menu.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        /* ... باقي الأنماط كما كانت ... */
+/* أنماط القائمة المنسدلة (باقي الأنماط كما كانت) */
+.dropdown-menu {
+    /* ... */
+}
+.dropdown-menu.show {
+    /* ... */
+}
+.modal-overlay {
+    /* ... */
+}
+/* ... */
