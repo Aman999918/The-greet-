@@ -281,8 +281,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuDropdownIcon = document.getElementById('menuDropdownIcon');
     // Initial theme application
     const storedDarkMode = localStorage.getItem('darkMode');
-    if (storedDarkMode === 'true') {
+    // جعل الوضع الليلي هو الافتراضي إذا لم يتم تحديد أي شيء
+    if (storedDarkMode === null || storedDarkMode === 'true') {
         isDarkMode = true;
+    } else {
+        isDarkMode = false;
     }
     applyTheme();
     // Event Listeners for Modals (to close when clicking outside)
@@ -330,16 +333,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Firebase Auth State Listener
     onAuthStateChanged(auth, async (user) => {
-        alert("بدء التحقق من حالة المصادقة...");
         try {
             if (user) {
-                alert("المستخدم موجود. معرف المستخدم هو: " + user.uid);
                 currentUserId = user.uid;
                 if (userIdDisplay) {
-                    alert("عنصر userIdDisplay موجود. سيتم تحديث النص.");
                     userIdDisplay.textContent = `هوية المستخدم: ${currentUserId}`;
-                } else {
-                    alert("خطأ: عنصر userIdDisplay غير موجود.");
                 }
                 
                 const urlParams = new URLSearchParams(window.location.search);
@@ -353,11 +351,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     errorMessage.querySelector('p').textContent = 'لم يتم تحديد معرّف المنتج في الرابط.';
                 }
             } else {
-                alert("المستخدم غير موجود. سيتم محاولة تسجيل الدخول كمجهول.");
                 try {
                     await signInAnonymously(auth);
                 } catch (authError) {
-                    alert("فشل تسجيل الدخول كمجهول. الخطأ هو: " + authError.message);
                     console.error("خطأ في تسجيل الدخول (مجهول):", authError);
                     if (userIdDisplay) {
                         userIdDisplay.textContent = `فشل المصادقة: ${authError.message}`;
@@ -369,7 +365,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } catch (initialError) {
-            alert("حدث خطأ عام غير متوقع: " + initialError.message);
             console.error("خطأ عام في تهيئة الصفحة:", initialError);
             errorMessage.classList.remove('hidden');
             loadingMessage.classList.add('hidden');
