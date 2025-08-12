@@ -84,31 +84,31 @@
     <header id="mainHeader" class="bg-white shadow p-4 flex items-center justify-between">
         <div class="flex items-center space-x-4 rtl:space-x-reverse">
             <div class="relative">
-                <button id="menuDropdownButton" class="text-xl p-1 rounded-full text-gray-700 dark:text-white">
+                <button id="menuDropdownButton" class="text-xl p-1 rounded-full text-gray-700">
                     <span id="menuDropdownIcon" class="material-symbols-outlined">arrow_drop_down</span>
                 </button>
                 <div id="menuDropdown" class="dropdown-menu">
-                    <a href="Index.html" class="flex items-center"><span class="material-symbols-outlined text-gray-700 dark:text-white">home</span> الرئيسية</a>
-                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700 dark:text-white">shopping_cart</span> إدارة الطلبات</a>
-                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700 dark:text-white">settings</span> الإعدادات</a>
-                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700 dark:text-white">info</span> عن التطبيق</a>
-                    <a href="#" id="manageAccountLink" class="flex items-center"><span class="material-symbols-outlined text-gray-700 dark:text-white">login</span> تسجيل الدخول / إدارة الحساب</a>
+                    <a href="Index.html" class="flex items-center"><span class="material-symbols-outlined text-gray-700">home</span> الرئيسية</a>
+                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">shopping_cart</span> إدارة الطلبات</a>
+                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">settings</span> الإعدادات</a>
+                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">info</span> عن التطبيق</a>
+                    <a href="#" id="manageAccountLink" class="flex items-center"><span class="material-symbols-outlined text-gray-700">login</span> تسجيل الدخول / إدارة الحساب</a>
                 </div>
             </div>
         </div>
-        <h1 class="text-xl font-bold text-center text-gray-800 dark:text-white flex-grow text-center">خطاب مبيعات - مصنع الأمان</h1>
+        <h1 class="text-xl font-bold text-center text-gray-800 flex-grow text-center">خطاب مبيعات - مصنع الأمان</h1>
         <div class="flex items-center gap-4">
-            <button id="modeToggleButton" class="text-xl p-1 rounded-full text-gray-700 dark:text-white">
+            <button id="modeToggleButton" class="text-xl p-1 rounded-full text-gray-700">
                 <span id="modeToggleIcon" class="material-symbols-outlined">light_mode</span>
             </button>
         </div>
     </header>
 
     <main class="container mx-auto py-8 px-4">
-        <div id="productDetailsContent" class="hidden">
-            <section class="mb-8 text-center">
+        <div id="productDetailsContent" class="hidden max-w-3xl mx-auto">
+            <section class="mb-8 text-center bg-white p-6 rounded-lg shadow-md">
                 <h2 id="pitchTitle" class="text-5xl font-bold mb-4">عنوان خطاب المبيعات</h2>
-                <p id="pitchTagline" class="text-2xl mb-4 text-gray-600 dark:text-gray-400">عبارة تسويقية جذابة...</p>
+                <p id="pitchTagline" class="text-2xl mb-4 text-gray-600">عبارة تسويقية جذابة...</p>
             </section>
             <div id="dynamicSectionsContainer"></div>
         </div>
