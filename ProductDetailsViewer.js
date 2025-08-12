@@ -29,6 +29,7 @@ let modalTitle;
 let modalContent;
 let modalActions;
 let loadingIndicator;
+let mainHeader; // عنصر الترويسة
 
 // عناصر DOM لصفحة عرض خطاب المبيعات
 let productDetailsContent;
@@ -89,6 +90,30 @@ function toggleDarkMode() {
 function applyTheme() {
     document.body.classList.toggle('dark-mode', isDarkMode);
     modeToggleIcon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
+
+    // تحديث ألوان الأيقونات في القائمة المنسدلة
+    const dropdownIcons = document.querySelectorAll('#menuDropdown .material-symbols-outlined');
+    dropdownIcons.forEach(icon => {
+        if (isDarkMode) {
+            icon.classList.remove('text-gray-700');
+            icon.classList.add('text-white');
+        } else {
+            icon.classList.remove('text-white');
+            icon.classList.add('text-gray-700');
+        }
+    });
+
+    // تحديث ألوان روابط القائمة المنسدلة
+    const dropdownLinks = document.querySelectorAll('#menuDropdown a');
+    dropdownLinks.forEach(link => {
+        if (isDarkMode) {
+            link.classList.remove('text-gray-700');
+            link.classList.add('text-white');
+        } else {
+            link.classList.remove('text-white');
+            link.classList.add('text-gray-700');
+        }
+    });
 }
 
 // دالة لجلب وعرض خطاب المبيعات
@@ -103,7 +128,6 @@ async function fetchAndDisplaySalesPitch(productId) {
     errorMessage.classList.add('hidden');
     productDetailsContent.classList.add('hidden');
     try {
-        // جلب معلومات خطاب المبيعات الأساسية من مجموعة 'products'
         const productDocRef = doc(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/products`, productId);
         const productSnap = await getDoc(productDocRef);
         if (!productSnap.exists()) {
@@ -112,12 +136,10 @@ async function fetchAndDisplaySalesPitch(productId) {
             return;
         }
         const pitchData = productSnap.data();
-
-        // عرض المعلومات الأساسية
+        
         pitchTitleElement.textContent = pitchData.name || 'خطاب مبيعات غير معروف';
         pitchTaglineElement.textContent = pitchData.description || 'لا يوجد عبارة تسويقية.';
-        
-        // جلب الأقسام الديناميكية من مجموعة 'productDetails'
+
         const dynamicDetailsDocRef = doc(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/productDetails`, productId);
         const dynamicDetailsSnap = await getDoc(dynamicDetailsDocRef);
         dynamicSectionsContainer.innerHTML = '';
@@ -126,8 +148,8 @@ async function fetchAndDisplaySalesPitch(productId) {
             const sections = dynamicData.sections || [];
             sections.sort((a, b) => (a.order || 0) - (b.order || 0));
             sections.forEach(section => {
-                const sectionDiv = document.createElement('div');
-                sectionDiv.className = 'my-8'; // لإضافة مساحة بين الأقسام
+                const cardDiv = document.createElement('div'); // إنشاء بطاقة جديدة لكل قسم
+                cardDiv.className = 'dynamic-section-card my-8 bg-white p-6 rounded-lg shadow-md';
                 let sectionTitleHtml = '';
                 let sectionContentHtml = '';
                 switch (section.type) {
@@ -146,7 +168,7 @@ async function fetchAndDisplaySalesPitch(productId) {
                                 }
                             });
                         } else {
-                            sectionContentHtml += `<p class="text-gray-500 dark:text-gray-400">لا يوجد وصف تفصيلي إضافي.</p>`;
+                            sectionContentHtml += `<p class="text-gray-500">لا يوجد وصف تفصيلي إضافي.</p>`;
                         }
                         break;
                     case 'images':
@@ -158,7 +180,7 @@ async function fetchAndDisplaySalesPitch(productId) {
                             });
                             sectionContentHtml += `</div>`;
                         } else {
-                            sectionContentHtml += `<p class="text-gray-500 dark:text-gray-400">لا توجد صور إضافية لهذا القسم.</p>`;
+                            sectionContentHtml += `<p class="text-gray-500">لا توجد صور إضافية لهذا القسم.</p>`;
                         }
                         break;
                     case 'info_card':
@@ -177,7 +199,7 @@ async function fetchAndDisplaySalesPitch(productId) {
                             });
                             sectionContentHtml += `</div>`;
                         } else {
-                            sectionContentHtml += `<p class="text-gray-500 dark:text-gray-400">لا توجد معلومات إضافية لهذا القسم.</p>`;
+                            sectionContentHtml += `<p class="text-gray-500">لا توجد معلومات إضافية لهذا القسم.</p>`;
                         }
                         break;
                     default:
@@ -185,18 +207,19 @@ async function fetchAndDisplaySalesPitch(productId) {
                 }
                 
                 if (sectionTitleHtml) {
-                    sectionDiv.innerHTML = sectionTitleHtml + `<div class="p-2">${sectionContentHtml}</div>`;
-                    dynamicSectionsContainer.appendChild(sectionDiv);
+                    cardDiv.innerHTML = sectionTitleHtml + `<div class="p-2">${sectionContentHtml}</div>`;
+                    dynamicSectionsContainer.appendChild(cardDiv);
                 }
             });
         } else {
             const noDynamicSectionsMessage = document.createElement('div');
-            noDynamicSectionsMessage.className = 'text-center text-gray-500 dark:text-gray-400 my-8';
+            noDynamicSectionsMessage.className = 'text-center text-gray-500 my-8';
             noDynamicSectionsMessage.innerHTML = `<p class="p-4">لا توجد تفاصيل ديناميكية إضافية لهذا الخطاب.</p>`;
             dynamicSectionsContainer.appendChild(noDynamicSectionsMessage);
         }
         loadingMessage.classList.add('hidden');
         productDetailsContent.classList.remove('hidden');
+        applyTheme();
         
     } catch (error) {
         console.error("خطأ في جلب أو عرض خطاب المبيعات:", error);
@@ -217,7 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
     modalContent = document.getElementById('modalContent');
     modalActions = document.getElementById('modalActions');
     loadingIndicator = document.getElementById('loadingIndicator');
-    
+    mainHeader = document.getElementById('mainHeader');
+
     // تعيين عناصر DOM لصفحة عرض خطاب المبيعات
     productDetailsContent = document.getElementById('productDetailsContent');
     loadingMessage = document.getElementById('loadingMessage');
