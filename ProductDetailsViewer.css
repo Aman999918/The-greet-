@@ -22,6 +22,7 @@ body {
     background-color: var(--bg-light);
     color: var(--text-dark);
     transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0; /* تأكيد إزالة الهامش الافتراضي */
 }
 /* الوضع الليلي */
 body.dark-mode {
@@ -31,10 +32,23 @@ body.dark-mode {
 
 /* أنماط الترويسة - تتغير مع الوضع */
 #mainHeader {
+    width: 100%; /* تأكيد أن الترويسة تمتد بالكامل */
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 body.dark-mode #mainHeader {
     background-color: var(--bg-dark);
+    color: var(--text-light);
+}
+#mainHeader h1 {
+    color: var(--text-dark);
+}
+body.dark-mode #mainHeader h1 {
+    color: var(--text-light);
+}
+#mainHeader .material-symbols-outlined {
+    color: var(--text-dark);
+}
+body.dark-mode #mainHeader .material-symbols-outlined {
     color: var(--text-light);
 }
 
@@ -100,5 +114,4 @@ body.dark-mode .dropdown-menu a {
 body.dark-mode .dropdown-menu a:hover {
     background-color: var(--bg-dark);
 }
-
-/* ... باقي الأنماط كما كانت ... */
+/* ... باقي الأنماط ... */
