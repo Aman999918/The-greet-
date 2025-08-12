@@ -18,7 +18,7 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 let currentUserId = null;
 let isDarkMode = false;
-let productId = null; // معرّف المنتج الذي سيتم عرضه
+let productId = null; // معرّف خطاب المبيعات الذي سيتم عرضه
 
 // عناصر DOM الرئيسية (للتيم والمودال)
 let modeToggleButton;
@@ -30,18 +30,16 @@ let modalContent;
 let modalActions;
 let loadingIndicator;
 
-// عناصر DOM لصفحة عرض تفاصيل المنتج
+// عناصر DOM لصفحة عرض خطاب المبيعات
 let productDetailsContent;
 let loadingMessage;
 let errorMessage;
 let goToHomePageButton;
-let productNameElement;
-let productPriceElement;
-let productCategoryElement;
-let productDescriptionShortElement;
+let pitchTitleElement;
+let pitchTaglineElement;
 let dynamicSectionsContainer;
 
-// دوال النافذة المنبثقة العامة (Universal Modal) - تبقى كما هي
+// دوال النافذة المنبثقة العامة (Universal Modal)
 function openModal(title, message, buttons = [], is_loading = false) {
     if (!modalTitle || !modalContent || !modalActions || !loadingIndicator || !universalModal) {
         console.error("Modal elements not found. Cannot open modal.");
@@ -81,7 +79,7 @@ function closeModal() {
     loadingIndicator.classList.add('hidden');
 }
 
-// دوال الثيم (الوضع الليلي/النهاري) - تبقى كما هي
+// دوال الثيم (الوضع الليلي/النهاري)
 function toggleDarkMode() {
     isDarkMode = !isDarkMode;
     localStorage.setItem('darkMode', isDarkMode);
@@ -89,38 +87,12 @@ function toggleDarkMode() {
 }
 
 function applyTheme() {
-    if (!document.body || !modeToggleIcon || !menuDropdownIcon) {
-        console.warn("Critical header elements not found for theme application. Retrying in 50ms.");
-        setTimeout(applyTheme, 50);
-        return;
-    }
     document.body.classList.toggle('dark-mode', isDarkMode);
     modeToggleIcon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
-    const headerIcons = document.querySelectorAll('header .material-symbols-outlined');
-    headerIcons.forEach(icon => {
-        if (!icon) return;
-        if (icon.id !== 'modeToggleIcon') {
-            if (isDarkMode) {
-                icon.style.color = 'var(--light-red)';
-            } else {
-                icon.style.color = 'var(--primary-red)';
-            }
-        }
-    });
-    const dropdownItems = document.querySelectorAll('#menuDropdown a .material-symbols-outlined');
-     dropdownItems.forEach(icon => {
-        if (!icon) return;
-        if (isDarkMode) {
-            icon.style.color = 'var(--light-red)';
-        } else {
-            icon.style.color = 'var(--primary-red)';
-        }
-    });
 }
 
-// ** الدوال الجديدة لعرض تفاصيل المنتج **
-// دالة لجلب وعرض تفاصيل المنتج
-async function fetchAndDisplayProductDetails(productId) {
+// دالة لجلب وعرض خطاب المبيعات
+async function fetchAndDisplaySalesPitch(productId) {
     if (!currentUserId || !productId) {
         errorMessage.classList.remove('hidden');
         loadingMessage.classList.add('hidden');
@@ -131,7 +103,7 @@ async function fetchAndDisplayProductDetails(productId) {
     errorMessage.classList.add('hidden');
     productDetailsContent.classList.add('hidden');
     try {
-        // جلب معلومات المنتج الأساسية من مجموعة 'products'
+        // جلب معلومات خطاب المبيعات الأساسية من مجموعة 'products'
         const productDocRef = doc(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/products`, productId);
         const productSnap = await getDoc(productDocRef);
         if (!productSnap.exists()) {
@@ -139,45 +111,28 @@ async function fetchAndDisplayProductDetails(productId) {
             loadingMessage.classList.add('hidden');
             return;
         }
-        const productData = productSnap.data();
+        const pitchData = productSnap.data();
 
         // عرض المعلومات الأساسية
-        productNameElement.textContent = productData.name || 'منتج غير معروف';
-        productCategoryElement.textContent = `الفئة: ${productData.category || 'غير مصنفة'}`;
-        productDescriptionShortElement.textContent = productData.description || 'لا يوجد وصف قصير لهذا المنتج.';
+        pitchTitleElement.textContent = pitchData.name || 'خطاب مبيعات غير معروف';
+        pitchTaglineElement.textContent = pitchData.description || 'لا يوجد عبارة تسويقية.';
         
-        // **منطق إخفاء السعر إذا كانت القيمة غير محددة فقط**
-        const productPrice = productData.price;
-        if (productPrice !== undefined && productPrice !== null) {
-            productPriceElement.textContent = `السعر: $${productPrice.toFixed(2)}`;
-            productPriceElement.classList.remove('hidden');
-        } else {
-            productPriceElement.classList.add('hidden');
-        }
-
-        // **تعديل هنا: استخدام الصورة الرئيسية كخلفية لـ body**
-        if (productData.imageUrl) {
-            document.body.style.backgroundImage = `url('${productData.imageUrl}')`;
-        } else {
-            document.body.style.backgroundImage = 'none';
-        }
-
         // جلب الأقسام الديناميكية من مجموعة 'productDetails'
         const dynamicDetailsDocRef = doc(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/productDetails`, productId);
         const dynamicDetailsSnap = await getDoc(dynamicDetailsDocRef);
-        dynamicSectionsContainer.innerHTML = ''; // مسح الأقسام القديمة
+        dynamicSectionsContainer.innerHTML = '';
         if (dynamicDetailsSnap.exists()) {
             const dynamicData = dynamicDetailsSnap.data();
             const sections = dynamicData.sections || [];
             sections.sort((a, b) => (a.order || 0) - (b.order || 0));
             sections.forEach(section => {
                 const sectionDiv = document.createElement('div');
-                sectionDiv.className = 'dynamic-section-container';
+                sectionDiv.className = 'my-8'; // لإضافة مساحة بين الأقسام
                 let sectionTitleHtml = '';
                 let sectionContentHtml = '';
                 switch (section.type) {
                     case 'description':
-                        sectionTitleHtml = `<h3><span class="material-symbols-outlined">description</span> وصف المنتج التفصيلي</h3>`;
+                        sectionTitleHtml = `<h3 class="dynamic-section-title"><span class="material-symbols-outlined">description</span> وصف المبيعات التفصيلي</h3>`;
                         if (section.lines && section.lines.length > 0) {
                             section.lines.forEach(line => {
                                 if (line.content && line.content.trim() !== '') {
@@ -191,15 +146,15 @@ async function fetchAndDisplayProductDetails(productId) {
                                 }
                             });
                         } else {
-                            sectionContentHtml += `<p class="text-gray-500 dark:text-gray-400">لا يوجد وصف تفصيلي إضافي لهذا المنتج.</p>`;
+                            sectionContentHtml += `<p class="text-gray-500 dark:text-gray-400">لا يوجد وصف تفصيلي إضافي.</p>`;
                         }
                         break;
                     case 'images':
-                        sectionTitleHtml = `<h3><span class="material-symbols-outlined">image</span> معرض الصور الإضافي</h3>`;
+                        sectionTitleHtml = `<h3 class="dynamic-section-title"><span class="material-symbols-outlined">image</span> معرض الصور الإضافي</h3>`;
                         if (section.images && section.images.length > 0) {
                             sectionContentHtml += `<div class="viewer-image-grid">`;
                             section.images.forEach(imgSrc => {
-                                sectionContentHtml += `<img src="${imgSrc}" alt="صورة إضافية للمنتج">`;
+                                sectionContentHtml += `<img src="${imgSrc}" alt="صورة إضافية">`;
                             });
                             sectionContentHtml += `</div>`;
                         } else {
@@ -207,7 +162,7 @@ async function fetchAndDisplayProductDetails(productId) {
                         }
                         break;
                     case 'info_card':
-                        sectionTitleHtml = `<h3><span class="material-symbols-outlined">info</span> معلومات إضافية</h3>`;
+                        sectionTitleHtml = `<h3 class="dynamic-section-title"><span class="material-symbols-outlined">info</span> نقاط القوة الرئيسية</h3>`;
                         if (section.items && section.items.length > 0) {
                             sectionContentHtml += `<div class="viewer-info-card">`;
                             section.items.forEach(item => {
@@ -236,16 +191,15 @@ async function fetchAndDisplayProductDetails(productId) {
             });
         } else {
             const noDynamicSectionsMessage = document.createElement('div');
-            noDynamicSectionsMessage.className = 'dynamic-section-container text-center text-gray-500 dark:text-gray-400';
-            noDynamicSectionsMessage.innerHTML = `<p class="p-4">لا توجد تفاصيل ديناميكية إضافية لهذا المنتج.</p>`;
+            noDynamicSectionsMessage.className = 'text-center text-gray-500 dark:text-gray-400 my-8';
+            noDynamicSectionsMessage.innerHTML = `<p class="p-4">لا توجد تفاصيل ديناميكية إضافية لهذا الخطاب.</p>`;
             dynamicSectionsContainer.appendChild(noDynamicSectionsMessage);
         }
         loadingMessage.classList.add('hidden');
         productDetailsContent.classList.remove('hidden');
-        applyTheme();
         
     } catch (error) {
-        console.error("خطأ في جلب أو عرض تفاصيل المنتج:", error);
+        console.error("خطأ في جلب أو عرض خطاب المبيعات:", error);
         loadingMessage.classList.add('hidden');
         errorMessage.classList.remove('hidden');
         productDetailsContent.classList.add('hidden');
@@ -264,30 +218,27 @@ document.addEventListener('DOMContentLoaded', () => {
     modalActions = document.getElementById('modalActions');
     loadingIndicator = document.getElementById('loadingIndicator');
     
-    // تعيين عناصر DOM لصفحة عرض تفاصيل المنتج
+    // تعيين عناصر DOM لصفحة عرض خطاب المبيعات
     productDetailsContent = document.getElementById('productDetailsContent');
     loadingMessage = document.getElementById('loadingMessage');
     errorMessage = document.getElementById('errorMessage');
     goToHomePageButton = document.getElementById('goToHomePage');
-    productNameElement = document.getElementById('productName');
-    productPriceElement = document.getElementById('productPrice');
-    productCategoryElement = document.getElementById('productCategory');
-    productDescriptionShortElement = document.getElementById('productDescriptionShort');
+    pitchTitleElement = document.getElementById('pitchTitle');
+    pitchTaglineElement = document.getElementById('pitchTagline');
     dynamicSectionsContainer = document.getElementById('dynamicSectionsContainer');
     
     // عناصر DOM للقائمة المنسدلة (من Header)
     const menuDropdownButton = document.getElementById('menuDropdownButton');
     const menuDropdown = document.getElementById('menuDropdown');
     const menuDropdownIcon = document.getElementById('menuDropdownIcon');
+    
     // Initial theme application
     const storedDarkMode = localStorage.getItem('darkMode');
-    // جعل الوضع الليلي هو الافتراضي إذا لم يتم تحديد أي شيء
-    if (storedDarkMode === null || storedDarkMode === 'true') {
+    if (storedDarkMode === 'true') {
         isDarkMode = true;
-    } else {
-        isDarkMode = false;
     }
     applyTheme();
+    
     // Event Listeners for Modals (to close when clicking outside)
     if (universalModal) {
         universalModal.addEventListener('click', (e) => {
@@ -343,12 +294,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const urlParams = new URLSearchParams(window.location.search);
                 productId = urlParams.get('id');
                 if (productId) {
-                    await fetchAndDisplayProductDetails(productId);
+                    await fetchAndDisplaySalesPitch(productId);
                 } else {
                     errorMessage.classList.remove('hidden');
                     loadingMessage.classList.add('hidden');
                     productDetailsContent.classList.add('hidden');
-                    errorMessage.querySelector('p').textContent = 'لم يتم تحديد معرّف المنتج في الرابط.';
+                    errorMessage.querySelector('p').textContent = 'لم يتم تحديد معرّف خطاب المبيعات في الرابط.';
                 }
             } else {
                 try {
