@@ -18,7 +18,7 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 let currentUserId = null;
 let isDarkMode = false;
-let productId = null; // معرّف خطاب المبيعات الذي سيتم عرضه
+let productId = null;
 
 // عناصر DOM الرئيسية (للتيم والمودال)
 let modeToggleButton;
@@ -29,7 +29,7 @@ let modalTitle;
 let modalContent;
 let modalActions;
 let loadingIndicator;
-let mainHeader; // عنصر الترويسة
+let mainHeader;
 
 // عناصر DOM لصفحة عرض خطاب المبيعات
 let productDetailsContent;
@@ -90,30 +90,6 @@ function toggleDarkMode() {
 function applyTheme() {
     document.body.classList.toggle('dark-mode', isDarkMode);
     modeToggleIcon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
-
-    // تحديث ألوان الأيقونات في القائمة المنسدلة
-    const dropdownIcons = document.querySelectorAll('#menuDropdown .material-symbols-outlined');
-    dropdownIcons.forEach(icon => {
-        if (isDarkMode) {
-            icon.classList.remove('text-gray-700');
-            icon.classList.add('text-white');
-        } else {
-            icon.classList.remove('text-white');
-            icon.classList.add('text-gray-700');
-        }
-    });
-
-    // تحديث ألوان روابط القائمة المنسدلة
-    const dropdownLinks = document.querySelectorAll('#menuDropdown a');
-    dropdownLinks.forEach(link => {
-        if (isDarkMode) {
-            link.classList.remove('text-gray-700');
-            link.classList.add('text-white');
-        } else {
-            link.classList.remove('text-white');
-            link.classList.add('text-gray-700');
-        }
-    });
 }
 
 // دالة لجلب وعرض خطاب المبيعات
@@ -148,8 +124,8 @@ async function fetchAndDisplaySalesPitch(productId) {
             const sections = dynamicData.sections || [];
             sections.sort((a, b) => (a.order || 0) - (b.order || 0));
             sections.forEach(section => {
-                const cardDiv = document.createElement('div'); // إنشاء بطاقة جديدة لكل قسم
-                cardDiv.className = 'dynamic-section-card my-8 bg-white p-6 rounded-lg shadow-md';
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'dynamic-section-card my-8';
                 let sectionTitleHtml = '';
                 let sectionContentHtml = '';
                 switch (section.type) {
@@ -219,7 +195,6 @@ async function fetchAndDisplaySalesPitch(productId) {
         }
         loadingMessage.classList.add('hidden');
         productDetailsContent.classList.remove('hidden');
-        applyTheme();
         
     } catch (error) {
         console.error("خطأ في جلب أو عرض خطاب المبيعات:", error);
