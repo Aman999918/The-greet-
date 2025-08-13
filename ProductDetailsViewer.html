@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تفاصيل المنتج - مصنع الأمان</title>
+    <title>خطاب مبيعات - مصنع الأمان</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-    <link rel="stylesheet" href="ProductDetailsViewer.css"> 
+    <link rel="stylesheet" href="ProductDetailsViewer.css">
     <style>
         /* أنماط إضافية خاصة بهذه الصفحة */
         .description-line-heading {
@@ -80,49 +80,45 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
-    <header id="mainHeader" class="bg-white shadow p-4 flex items-center justify-between">
+<body>
+    <header id="mainHeader" class="bg-white shadow p-4 flex items-center justify-end">
         <div class="flex items-center space-x-4 rtl:space-x-reverse">
+            <button id="modeToggleButton" class="text-xl p-1 rounded-full text-gray-700">
+                <span id="modeToggleIcon" class="material-symbols-outlined">light_mode</span>
+            </button>
             <div class="relative">
                 <button id="menuDropdownButton" class="text-xl p-1 rounded-full text-gray-700">
                     <span id="menuDropdownIcon" class="material-symbols-outlined">arrow_drop_down</span>
                 </button>
                 <div id="menuDropdown" class="dropdown-menu">
-                    <a href="Index.html" class="flex items-center"><span class="material-symbols-outlined">home</span> الرئيسية</a>
-                    <a href="#" class="flex items-center"><span class="material-symbols-outlined">shopping_cart</span> إدارة الطلبات</a>
-                    <a href="#" class="flex items-center"><span class="material-symbols-outlined">settings</span> الإعدادات</a>
-                    <a href="#" class="flex items-center"><span class="material-symbols-outlined">info</span> عن التطبيق</a>
-                    <a href="#" id="manageAccountLink" class="flex items-center"><span class="material-symbols-outlined">login</span> تسجيل الدخول / إدارة الحساب</a>
+                    <a href="Index.html" class="flex items-center"><span class="material-symbols-outlined text-gray-700">home</span> الرئيسية</a>
+                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">shopping_cart</span> إدارة الطلبات</a>
+                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">settings</span> الإعدادات</a>
+                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">info</span> عن التطبيق</a>
+                    <a href="#" id="manageAccountLink" class="flex items-center"><span class="material-symbols-outlined text-gray-700">login</span> تسجيل الدخول / إدارة الحساب</a>
                 </div>
             </div>
         </div>
-        <h1 class="text-xl font-bold text-center text-gray-800 flex-grow text-center">تفاصيل المنتج - مصنع الأمان</h1>
-        <div class="flex items-center gap-4">
-            <button id="modeToggleButton" class="text-xl p-1 rounded-full text-gray-700">
-                <span id="modeToggleIcon" class="material-symbols-outlined">light_mode</span>
-            </button>
-        </div>
+        <h1 class="text-xl font-bold text-center text-gray-800 flex-grow text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">تفاصيل المنتج - مصنع الأمان</h1>
     </header>
 
     <main class="container mx-auto py-8 px-4">
-        <div id="productDetailsContent" class="hidden text-white">
-            <section class="mb-8 p-4 rounded-lg bg-black bg-opacity-50 text-center">
-                <h2 id="productName" class="text-5xl font-bold mb-4">اسم المنتج</h2>
-                <p id="productPrice" class="text-3xl font-semibold mb-2">السعر: $0.00</p>
-                <p id="productCategory" class="text-xl mb-4">الفئة: لا يوجد</p>
-                <p id="productDescriptionShort" class="text-lg mx-auto max-w-2xl text-gray-800 dark:text-white">وصف قصير للمنتج من صفحة إدارة المنتجات.</p>
+        <div id="productDetailsContent" class="hidden max-w-3xl mx-auto">
+            <section class="mb-8 text-center">
+                <h2 id="pitchTitle" class="text-5xl font-bold mb-4">عنوان خطاب المبيعات</h2>
+                <p id="pitchTagline" class="text-2xl mb-4 text-gray-600">عبارة تسويقية جذابة...</p>
             </section>
             <div id="dynamicSectionsContainer"></div>
         </div>
-
+        
         <div id="loadingMessage" class="text-center text-lg text-gray-600 mt-10">
             <span class="material-symbols-outlined animate-spin text-4xl text-blue-600">progress_activity</span>
-            <p class="mt-4">جاري تحميل تفاصيل المنتج...</p>
+            <p class="mt-4">جاري تحميل خطاب المبيعات...</p>
         </div>
 
         <div id="errorMessage" class="hidden text-center text-red-600 text-lg mt-10">
             <span class="material-symbols-outlined text-4xl">error</span>
-            <p class="mt-4">تعذر تحميل تفاصيل المنتج أو المنتج غير موجود.</p>
+            <p class="mt-4">تعذر تحميل خطاب المبيعات أو الصفحة غير موجودة.</p>
             <button id="goToHomePage" class="mt-6 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">العودة إلى الرئيسية</button>
         </div>
     </main>
