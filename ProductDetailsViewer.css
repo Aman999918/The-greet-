@@ -22,42 +22,55 @@ body {
     background-color: var(--bg-light);
     color: var(--text-dark);
     transition: background-color 0.3s ease, color 0.3s ease;
-    margin: 0; /* تأكيد إزالة الهامش الافتراضي */
+    margin: 0;
 }
 /* الوضع الليلي */
 body.dark-mode {
-    background-color: var(--bg-dark);
-    color: var(--text-light);
+    background-color: #1a1a2e; /* لون أغمق ومميز */
+    color: #f0f0f0;
 }
 
 /* أنماط الترويسة - تتغير مع الوضع */
 #mainHeader {
-    width: 100%; /* تأكيد أن الترويسة تمتد بالكامل */
+    width: 100%;
     transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 1.5rem 1rem; /* زيادة الارتفاع لجعلها أطول */
 }
 body.dark-mode #mainHeader {
-    background-color: var(--bg-dark);
-    color: var(--text-light);
+    background-color: #0d0d1a; /* لون أغمق لترويسة الوضع المظلم */
+    color: #f0f0f0;
 }
 #mainHeader h1 {
     color: var(--text-dark);
 }
 body.dark-mode #mainHeader h1 {
-    color: var(--text-light);
+    color: #f0f0f0; /* لون الخط الأبيض المميز */
 }
 #mainHeader .material-symbols-outlined {
     color: var(--text-dark);
 }
 body.dark-mode #mainHeader .material-symbols-outlined {
-    color: var(--text-light);
+    color: #f0f0f0;
 }
 
-/* أنماط الأقسام الديناميكية - بدون بطاقات */
-#dynamicSectionsContainer .dynamic-section-title {
+/* أنماط الأقسام الديناميكية (البطاقات) */
+.dynamic-section-card {
+    background-color: var(--card-light);
+    border: 1px solid var(--border-light);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+body.dark-mode .dynamic-section-card {
+    background-color: #2a2a44; /* لون بطاقة مميز في الوضع المظلم */
+    border-color: #4b4b6c;
+}
+.dynamic-section-title {
     font-size: 1.5rem;
     font-weight: bold;
     color: var(--primary-red);
-    margin-top: 2rem;
+    margin-top: 0;
     margin-bottom: 1rem;
     border-bottom: 1px solid var(--border-light);
     padding-bottom: 0.75rem;
@@ -65,9 +78,9 @@ body.dark-mode #mainHeader .material-symbols-outlined {
     align-items: center;
     gap: 0.75rem;
 }
-body.dark-mode #dynamicSectionsContainer .dynamic-section-title {
-    color: var(--light-red);
-    border-color: var(--border-dark);
+body.dark-mode .dynamic-section-title {
+    color: #ff5757; /* لون مميز للعنوان في الوضع المظلم */
+    border-color: #4b4b6c;
 }
 
 /* أنماط القائمة المنسدلة */
@@ -105,13 +118,13 @@ body.dark-mode #dynamicSectionsContainer .dynamic-section-title {
     background-color: var(--bg-light);
 }
 body.dark-mode .dropdown-menu {
-    background-color: var(--card-dark);
-    border-color: var(--border-dark);
+    background-color: #2a2a44;
+    border-color: #4b4b6c;
 }
 body.dark-mode .dropdown-menu a {
-    color: var(--text-light);
+    color: #f0f0f0;
 }
 body.dark-mode .dropdown-menu a:hover {
-    background-color: var(--bg-dark);
+    background-color: #3b3b5c;
 }
 /* ... باقي الأنماط ... */
