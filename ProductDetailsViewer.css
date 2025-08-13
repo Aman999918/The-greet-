@@ -37,8 +37,8 @@ body.dark-mode {
     padding: 1rem;
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* محاذاة العناصر إلى اليمين */
-    position: relative; /* لجعل العنوان في المنتصف المطلق */
+    justify-content: space-between; /* لمحاذاة العناصر على الأطراف */
+    position: relative;
 }
 body.dark-mode #mainHeader {
     background-color: #0d0d1a;
@@ -46,7 +46,8 @@ body.dark-mode #mainHeader {
 }
 #mainHeader h1 {
     color: var(--text-dark);
-    font-size: 1.2rem; /* تصغير حجم الخط قليلاً */
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 body.dark-mode #mainHeader h1 {
     color: #f0f0f0;
@@ -58,12 +59,9 @@ body.dark-mode #mainHeader .material-symbols-outlined {
     color: #f0f0f0;
 }
 #mainHeader > div {
-    margin-left: auto; /* لدفع القائمة وزر الوضع إلى أقصى اليمين */
     display: flex;
     align-items: center;
-}
-#mainHeader h1.absolute {
-    font-size: 1.4rem; /* حجم أكبر قليلاً لعنوان المنتج */
+    gap: 0.5rem; /* مسافة بسيطة بين الأيقونات */
 }
 
 /* أنماط الأقسام الديناميكية (البطاقات) */
