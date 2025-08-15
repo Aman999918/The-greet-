@@ -26,7 +26,7 @@ body {
 }
 /* الوضع الليلي */
 body.dark-mode {
-    background-color: #1a1a2e; /* لون أغمق ومميز */
+    background-color: #1a1a2e;
     color: #f0f0f0;
 }
 
@@ -84,6 +84,35 @@ body.dark-mode .dynamic-section-title {
     color: #ff5757;
     border-color: #4b4b6c;
 }
+
+.viewer-info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+body.dark-mode .viewer-info-item {
+    background-color: transparent;
+}
+.viewer-info-item .material-symbols-outlined {
+    color: var(--primary-red);
+    font-size: 2rem;
+}
+.viewer-info-item .info-text {
+    flex-grow: 1;
+}
+.viewer-info-item .key {
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-bottom: 0.25rem;
+}
+body.dark-mode .viewer-info-item .key {
+    color: var(--text-light);
+}
+.viewer-info-item .value {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
 /* أنماط القائمة المنسدلة */
 .dropdown-menu {
     position: absolute;
@@ -127,4 +156,4 @@ body.dark-mode .dropdown-menu a {
 }
 body.dark-mode .dropdown-menu a:hover {
     background-color: #3b3b5c;
-}
+    }
