@@ -19,8 +19,9 @@
 
 body {
     font-family: sans-serif;
+    /* تم تغيير اللون الأساسي للنص ليكون أغمق وأكثر وضوحًا */
     background-color: var(--bg-light);
-    color: var(--text-dark);
+    color: #374151; /* لون نص داكن */
     transition: background-color 0.3s ease, color 0.3s ease;
     margin: 0;
 }
@@ -45,7 +46,8 @@ body.dark-mode #mainHeader {
     color: #f0f0f0;
 }
 #mainHeader h1 {
-    color: var(--text-dark);
+    /* تم تغيير لون النص ليكون أكثر وضوحًا في الوضع الفاتح */
+    color: #1f2937;
     font-size: 1.2rem;
     font-weight: bold;
 }
@@ -53,7 +55,8 @@ body.dark-mode #mainHeader h1 {
     color: #f0f0f0;
 }
 #mainHeader .material-symbols-outlined {
-    color: var(--text-dark);
+    /* تم تغيير لون النص ليكون أكثر وضوحًا في الوضع الفاتح */
+    color: #1f2937;
 }
 body.dark-mode #mainHeader .material-symbols-outlined {
     color: #f0f0f0;
@@ -103,14 +106,14 @@ body.dark-mode .viewer-info-item {
 }
 .viewer-info-item .key {
     font-weight: bold;
-    color: var(--text-dark);
+    color: #1f2937; /* لون نص داكن */
     margin-bottom: 0.25rem;
 }
 body.dark-mode .viewer-info-item .key {
     color: var(--text-light);
 }
 .viewer-info-item .value {
-    color: var(--text-muted);
+    color: #6b7280; /* لون نص داكن باهت */
     font-size: 0.95rem;
 }
 /* أنماط القائمة المنسدلة */
@@ -141,7 +144,7 @@ body.dark-mode .viewer-info-item .key {
     gap: 0.75rem;
     padding: 0.75rem 1rem;
     border-radius: 0.375rem;
-    color: var(--text-dark);
+    color: #1f2937; /* لون نص داكن */
     transition: background-color 0.2s ease;
 }
 .dropdown-menu a:hover {
@@ -156,4 +159,4 @@ body.dark-mode .dropdown-menu a {
 }
 body.dark-mode .dropdown-menu a:hover {
     background-color: #3b3b5c;
-            }
+}
