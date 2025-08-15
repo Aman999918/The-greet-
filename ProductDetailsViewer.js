@@ -36,8 +36,11 @@ let productDetailsContent;
 let loadingMessage;
 let errorMessage;
 let goToHomePageButton;
-let pitchTitleElement;
-let pitchTaglineElement;
+// تم تصحيح هذه المتغيرات لتتوافق مع ملف HTML
+let productNameElement;
+let productPriceElement;
+let productCategoryElement;
+let productDescriptionShortElement;
 let dynamicSectionsContainer;
 
 // دوال النافذة المنبثقة العامة (Universal Modal)
@@ -113,8 +116,9 @@ async function fetchAndDisplaySalesPitch(productId) {
         }
         const pitchData = productSnap.data();
         
-        pitchTitleElement.textContent = pitchData.name || 'خطاب مبيعات غير معروف';
-        pitchTaglineElement.textContent = pitchData.description || 'لا يوجد عبارة تسويقية.';
+        // تم تصحيح أسماء العناصر هنا
+        productNameElement.textContent = pitchData.name || 'خطاب مبيعات غير معروف';
+        productDescriptionShortElement.textContent = pitchData.description || 'لا يوجد عبارة تسويقية.';
 
         const dynamicDetailsDocRef = doc(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/productDetails`, productId);
         const dynamicDetailsSnap = await getDoc(dynamicDetailsDocRef);
@@ -230,8 +234,11 @@ document.addEventListener('DOMContentLoaded', () => {
     loadingMessage = document.getElementById('loadingMessage');
     errorMessage = document.getElementById('errorMessage');
     goToHomePageButton = document.getElementById('goToHomePage');
-    pitchTitleElement = document.getElementById('pitchTitle');
-    pitchTaglineElement = document.getElementById('pitchTagline');
+    // تم تصحيح هذه المتغيرات لتتوافق مع ملف HTML
+    productNameElement = document.getElementById('productName');
+    productPriceElement = document.getElementById('productPrice');
+    productCategoryElement = document.getElementById('productCategory');
+    productDescriptionShortElement = document.getElementById('productDescriptionShort');
     dynamicSectionsContainer = document.getElementById('dynamicSectionsContainer');
     
     // عناصر DOM للقائمة المنسدلة (من Header)
@@ -330,4 +337,4 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessage.querySelector('p').textContent = `حدث خطأ غير متوقع: ${initialError.message}`;
         }
     });
-});
+}); 
