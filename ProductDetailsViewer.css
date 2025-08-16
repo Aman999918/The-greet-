@@ -19,9 +19,8 @@
 
 body {
     font-family: sans-serif;
-    /* تم تغيير اللون الأساسي للنص ليكون أغمق وأكثر وضوحًا */
     background-color: var(--bg-light);
-    color: #374151; /* لون نص داكن */
+    color: #1f2937; /* تم تغيير اللون لضمان الوضوح في الوضع الفاتح */
     transition: background-color 0.3s ease, color 0.3s ease;
     margin: 0;
 }
@@ -46,7 +45,6 @@ body.dark-mode #mainHeader {
     color: #f0f0f0;
 }
 #mainHeader h1 {
-    /* تم تغيير لون النص ليكون أكثر وضوحًا في الوضع الفاتح */
     color: #1f2937;
     font-size: 1.2rem;
     font-weight: bold;
@@ -55,7 +53,6 @@ body.dark-mode #mainHeader h1 {
     color: #f0f0f0;
 }
 #mainHeader .material-symbols-outlined {
-    /* تم تغيير لون النص ليكون أكثر وضوحًا في الوضع الفاتح */
     color: #1f2937;
 }
 body.dark-mode #mainHeader .material-symbols-outlined {
@@ -70,7 +67,14 @@ body.dark-mode #mainHeader .material-symbols-outlined {
 /* أنماط الأقسام الديناميكية (بدون بطاقات) */
 .dynamic-section {
     margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: var(--bg-light); /* لضمان أن القسم نفسه له خلفية */
+    border-radius: 0.5rem;
 }
+body.dark-mode .dynamic-section {
+    background-color: #2a2a44;
+}
+
 .dynamic-section-title {
     font-size: 1.5rem;
     font-weight: bold;
@@ -90,13 +94,11 @@ body.dark-mode .dynamic-section-title {
 
 .viewer-info-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
     padding: 1rem;
 }
-body.dark-mode .viewer-info-item {
-    background-color: transparent;
-}
+
 .viewer-info-item .material-symbols-outlined {
     color: var(--primary-red);
     font-size: 2rem;
@@ -106,14 +108,14 @@ body.dark-mode .viewer-info-item {
 }
 .viewer-info-item .key {
     font-weight: bold;
-    color: #1f2937; /* لون نص داكن */
+    color: #1f2937;
     margin-bottom: 0.25rem;
 }
 body.dark-mode .viewer-info-item .key {
     color: var(--text-light);
 }
 .viewer-info-item .value {
-    color: #6b7280; /* لون نص داكن باهت */
+    color: #4b5563; /* تم تغيير اللون لضمان الوضوح */
     font-size: 0.95rem;
 }
 /* أنماط القائمة المنسدلة */
@@ -144,7 +146,7 @@ body.dark-mode .viewer-info-item .key {
     gap: 0.75rem;
     padding: 0.75rem 1rem;
     border-radius: 0.375rem;
-    color: #1f2937; /* لون نص داكن */
+    color: #1f2937;
     transition: background-color 0.2s ease;
 }
 .dropdown-menu a:hover {
