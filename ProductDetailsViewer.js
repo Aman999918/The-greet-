@@ -36,10 +36,8 @@ let productDetailsContent;
 let loadingMessage;
 let errorMessage;
 let goToHomePageButton;
-let productNameElement;
-let productPriceElement;
-let productCategoryElement;
-let productDescriptionShortElement;
+let pitchTitleElement;
+let pitchTaglineElement;
 let dynamicSectionsContainer;
 
 // دوال النافذة المنبثقة العامة (Universal Modal)
@@ -115,10 +113,8 @@ async function fetchAndDisplaySalesPitch(productId) {
         }
         const pitchData = productSnap.data();
         
-        productNameElement.textContent = pitchData.name || 'خطاب مبيعات غير معروف';
-        productDescriptionShortElement.textContent = pitchData.description || 'لا يوجد عبارة تسويقية.';
-        productPriceElement.textContent = `السعر: ${pitchData.price || 'لا يوجد سعر'} $`;
-        productCategoryElement.textContent = `الفئة: ${pitchData.category || 'لا يوجد'}`;
+        pitchTitleElement.textContent = pitchData.name || 'خطاب مبيعات غير معروف';
+        pitchTaglineElement.textContent = pitchData.description || 'لا يوجد عبارة تسويقية.';
 
         const dynamicDetailsDocRef = doc(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/productDetails`, productId);
         const dynamicDetailsSnap = await getDoc(dynamicDetailsDocRef);
@@ -158,4 +154,180 @@ async function fetchAndDisplaySalesPitch(productId) {
                         sectionTitleText = 'معرض الصور الإضافي';
                         sectionIcon = 'image';
                         if (section.images && section.images.length > 0) {
-                            sectionContentHtml += `
+                            sectionContentHtml += `<div class="viewer-image-grid">`;
+                            section.images.forEach(imgSrc => {
+                                sectionContentHtml += `<img src="${imgSrc}" alt="صورة إضافية">`;
+                            });
+                            sectionContentHtml += `</div>`;
+                        } else {
+                            sectionContentHtml += `<p class="text-gray-500 dark:text-gray-400">لا توجد صور إضافية لهذا القسم.</p>`;
+                        }
+                        break;
+                    case 'info_card':
+                        sectionTitleText = 'نقاط القوة الرئيسية';
+                        sectionIcon = 'info';
+                        if (section.items && section.items.length > 0) {
+                            sectionContentHtml += `<div class="viewer-info-grid">`;
+                            section.items.forEach(item => {
+                                if (item.key && item.value) {
+                                    sectionContentHtml += `
+                                        <div class="viewer-info-item">
+                                            <span class="material-symbols-outlined">info</span>
+                                            <div class="info-text">
+                                                <div class="key">${item.key}</div>
+                                                <div class="value">${item.value}</div>
+                                            </div>
+                                        </div>
+                                    `;
+                                }
+                            });
+                            sectionContentHtml += `</div>`;
+                        } else {
+                            sectionContentHtml += `<p class="text-gray-500 dark:text-gray-400">لا توجد معلومات إضافية لهذا القسم.</p>`;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                const sectionTitleHtml = `<h3 class="dynamic-section-title"><span class="material-symbols-outlined">${sectionIcon}</span> ${sectionTitleText}</h3>`;
+                sectionDiv.innerHTML = sectionTitleHtml + `<div class="p-2">${sectionContentHtml}</div>`;
+                dynamicSectionsContainer.appendChild(sectionDiv);
+            });
+        } else {
+            const noDynamicSectionsMessage = document.createElement('div');
+            noDynamicSectionsMessage.className = 'text-center text-gray-500 my-8';
+            noDynamicSectionsMessage.innerHTML = `<p class="p-4">لا توجد تفاصيل ديناميكية إضافية لهذا الخطاب.</p>`;
+            dynamicSectionsContainer.appendChild(noDynamicSectionsMessage);
+        }
+        loadingMessage.classList.add('hidden');
+        productDetailsContent.classList.remove('hidden');
+        applyTheme();
+        
+    } catch (error) {
+        console.error("خطأ في جلب أو عرض خطاب المبيعات:", error);
+        loadingMessage.classList.add('hidden');
+        errorMessage.classList.remove('hidden');
+        productDetailsContent.classList.add('hidden');
+    }
+}
+
+// DOMContentLoaded Listener
+document.addEventListener('DOMContentLoaded', () => {
+    // تعيين عناصر DOM الرئيسية
+    modeToggleButton = document.getElementById('modeToggleButton');
+    modeToggleIcon = document.getElementById('modeToggleIcon');
+    userIdDisplay = document.getElementById('userIdDisplay');
+    universalModal = document.getElementById('universalModal');
+    modalTitle = document.getElementById('modalTitle');
+    modalContent = document.getElementById('modalContent');
+    modalActions = document.getElementById('modalActions');
+    loadingIndicator = document.getElementById('loadingIndicator');
+    mainHeader = document.getElementById('mainHeader');
+
+    // تعيين عناصر DOM لصفحة عرض خطاب المبيعات
+    productDetailsContent = document.getElementById('productDetailsContent');
+    loadingMessage = document.getElementById('loadingMessage');
+    errorMessage = document.getElementById('errorMessage');
+    goToHomePageButton = document.getElementById('goToHomePage');
+    pitchTitleElement = document.getElementById('pitchTitle');
+    pitchTaglineElement = document.getElementById('pitchTagline');
+    dynamicSectionsContainer = document.getElementById('dynamicSectionsContainer');
+    
+    // عناصر DOM للقائمة المنسدلة (من Header)
+    const menuDropdownButton = document.getElementById('menuDropdownButton');
+    const menuDropdown = document.getElementById('menuDropdown');
+    const menuDropdownIcon = document.getElementById('menuDropdownIcon');
+    
+    // Initial theme application
+    const storedDarkMode = localStorage.getItem('darkMode');
+    if (storedDarkMode === 'true') {
+        isDarkMode = true;
+    }
+    applyTheme();
+    
+    // Event Listeners for Modals (to close when clicking outside)
+    if (universalModal) {
+        universalModal.addEventListener('click', (e) => {
+            if (e.target === universalModal) {
+                closeModal();
+            }
+        });
+    }
+    // Event Listeners for Header Icons
+    if (modeToggleButton) {
+        modeToggleButton.addEventListener('click', toggleDarkMode);
+    }
+    // Toggle Dropdown Menu and change icon
+    if (menuDropdownButton && menuDropdown && menuDropdownIcon) {
+        menuDropdownButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const isShowing = menuDropdown.classList.toggle('show');
+            menuDropdownIcon.textContent = isShowing ? 'arrow_drop_up' : 'arrow_drop_down';
+        });
+        // Close Dropdown Menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (menuDropdown && menuDropdownButton && !menuDropdown.contains(event.target) && !menuDropdownButton.contains(event.target)) {
+                menuDropdown.classList.remove('show');
+                menuDropdownIcon.textContent = 'arrow_drop_down';
+            }
+        });
+    }
+    // Handle the "Manage Account" link from header
+    const manageAccountLink = document.getElementById('manageAccountLink');
+    if (manageAccountLink) {
+        manageAccountLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal();
+            openModal('إدارة الحساب', 'هنا يمكنك إضافة منطق لتسجيل الدخول أو الخروج أو إدارة الملف الشخصي.', [{ text: 'موافق', className: 'bg-blue-500 text-white', onClick: closeModal }]);
+        });
+    }
+    // Event Listener لزر "العودة إلى الرئيسية" في رسالة الخطأ
+    if (goToHomePageButton) {
+        goToHomePageButton.addEventListener('click', () => {
+            window.location.href = 'Index.html';
+        });
+    }
+    
+    // Firebase Auth State Listener
+    onAuthStateChanged(auth, async (user) => {
+        try {
+            if (user) {
+                currentUserId = user.uid;
+                if (userIdDisplay) {
+                    userIdDisplay.textContent = `هوية المستخدم: ${currentUserId}`;
+                }
+                
+                const urlParams = new URLSearchParams(window.location.search);
+                productId = urlParams.get('id');
+                if (productId) {
+                    await fetchAndDisplaySalesPitch(productId);
+                } else {
+                    errorMessage.classList.remove('hidden');
+                    loadingMessage.classList.add('hidden');
+                    productDetailsContent.classList.add('hidden');
+                    errorMessage.querySelector('p').textContent = 'لم يتم تحديد معرّف خطاب المبيعات في الرابط.';
+                }
+            } else {
+                try {
+                    await signInAnonymously(auth);
+                } catch (authError) {
+                    console.error("خطأ في تسجيل الدخول (مجهول):", authError);
+                    if (userIdDisplay) {
+                        userIdDisplay.textContent = `فشل المصادقة: ${authError.message}`;
+                    }
+                   errorMessage.classList.remove('hidden');
+                    loadingMessage.classList.add('hidden');
+                    productDetailsContent.classList.add('hidden');
+                    errorMessage.querySelector('p').textContent = `تعذر تسجيل الدخول للمتابعة: ${authError.message}`;
+                }
+            }
+        } catch (initialError) {
+            console.error("خطأ عام في تهيئة الصفحة:", initialError);
+            errorMessage.classList.remove('hidden');
+            loadingMessage.classList.add('hidden');
+            productDetailsContent.classList.add('hidden');
+            errorMessage.querySelector('p').textContent = `حدث خطأ غير متوقع: ${initialError.message}`;
+        }
+    });
+});
