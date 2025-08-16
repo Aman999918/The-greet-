@@ -36,7 +36,6 @@ let productDetailsContent;
 let loadingMessage;
 let errorMessage;
 let goToHomePageButton;
-// تم تصحيح هذه المتغيرات لتتوافق مع ملف HTML
 let productNameElement;
 let productPriceElement;
 let productCategoryElement;
@@ -116,9 +115,10 @@ async function fetchAndDisplaySalesPitch(productId) {
         }
         const pitchData = productSnap.data();
         
-        // تم تصحيح أسماء العناصر هنا
         productNameElement.textContent = pitchData.name || 'خطاب مبيعات غير معروف';
         productDescriptionShortElement.textContent = pitchData.description || 'لا يوجد عبارة تسويقية.';
+        productPriceElement.textContent = `السعر: ${pitchData.price || 'لا يوجد سعر'} $`;
+        productCategoryElement.textContent = `الفئة: ${pitchData.category || 'لا يوجد'}`;
 
         const dynamicDetailsDocRef = doc(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/productDetails`, productId);
         const dynamicDetailsSnap = await getDoc(dynamicDetailsDocRef);
@@ -234,7 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadingMessage = document.getElementById('loadingMessage');
     errorMessage = document.getElementById('errorMessage');
     goToHomePageButton = document.getElementById('goToHomePage');
-    // تم تصحيح هذه المتغيرات لتتوافق مع ملف HTML
     productNameElement = document.getElementById('productName');
     productPriceElement = document.getElementById('productPrice');
     productCategoryElement = document.getElementById('productCategory');
@@ -337,4 +336,4 @@ document.addEventListener('DOMContentLoaded', () => {
             errorMessage.querySelector('p').textContent = `حدث خطأ غير متوقع: ${initialError.message}`;
         }
     });
-}); 
+});
