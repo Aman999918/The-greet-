@@ -110,7 +110,7 @@ body.dark-mode .viewer-info-item .key {
     color: var(--text-light);
 }
 .viewer-info-item .value {
-    color: #6b7280;
+    color: var(--text-muted);
     font-size: 0.95rem;
 }
 /* أنماط القائمة المنسدلة */
