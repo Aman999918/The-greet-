@@ -227,6 +227,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // تعيين عناصر DOM لصفحة عرض خطاب المبيعات
     productDetailsContent = document.getElementById('productDetailsContent');
+    if (productDetailsContent) {
+        productDetailsContent.style.maxWidth = '100%';
+        productDetailsContent.style.margin = '0 auto';
+    }
     loadingMessage = document.getElementById('loadingMessage');
     errorMessage = document.getElementById('errorMessage');
     goToHomePageButton = document.getElementById('goToHomePage');
