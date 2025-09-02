@@ -26,7 +26,6 @@
         body.dark-mode .description-line-highlight {
             color: var(--light-blue);
         }
-        /* أنماط لمعرض الصور في صفحة العرض */
         .viewer-image-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -47,7 +46,6 @@
         .viewer-image-grid img:hover {
             transform: scale(1.03);
         }
-        /* أنماط للصفوف المتجاورة لنقاط القوة */
         .viewer-info-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -86,28 +84,29 @@
     </style>
 </head>
 <body>
-    <header id="mainHeader" class="bg-white shadow p-4 flex items-center justify-between">
-        <h1 class="text-xl font-bold text-gray-800">تفاصيل المنتج - مصنع الأمان</h1>
-        <div class="flex items-center space-x-4 rtl:space-x-reverse">
-            <button id="modeToggleButton" class="text-xl p-1 rounded-full text-gray-700">
-                <span id="modeToggleIcon" class="material-symbols-outlined">light_mode</span>
+    <header id="mainHeader" class="bg-white shadow p-4 flex items-center justify-between" style="margin:0;">
+        <!-- أيقونة القائمة المنسدلة في أقصى اليمين -->
+        <div class="relative">
+            <button id="menuDropdownButton" class="text-xl p-1 rounded-full text-gray-700">
+                <span id="menuDropdownIcon" class="material-symbols-outlined">arrow_drop_down</span>
             </button>
-            <div class="relative">
-                <button id="menuDropdownButton" class="text-xl p-1 rounded-full text-gray-700">
-                    <span id="menuDropdownIcon" class="material-symbols-outlined">arrow_drop_down</span>
-                </button>
-                <div id="menuDropdown" class="dropdown-menu">
-                    <a href="Index.html" class="flex items-center"><span class="material-symbols-outlined text-gray-700">home</span> الرئيسية</a>
-                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">shopping_cart</span> إدارة الطلبات</a>
-                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">settings</span> الإعدادات</a>
-                    <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">info</span> عن التطبيق</a>
-                    <a href="#" id="manageAccountLink" class="flex items-center"><span class="material-symbols-outlined text-gray-700">login</span> تسجيل الدخول / إدارة الحساب</a>
-                </div>
+            <div id="menuDropdown" class="dropdown-menu">
+                <a href="Index.html" class="flex items-center"><span class="material-symbols-outlined text-gray-700">home</span> الرئيسية</a>
+                <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">shopping_cart</span> إدارة الطلبات</a>
+                <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">settings</span> الإعدادات</a>
+                <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">info</span> عن التطبيق</a>
+                <a href="#" id="manageAccountLink" class="flex items-center"><span class="material-symbols-outlined text-gray-700">login</span> تسجيل الدخول / إدارة الحساب</a>
             </div>
         </div>
+        <!-- العنوان في الوسط -->
+        <h1 class="text-xl font-bold text-gray-800 text-center flex-1" style="margin:0;">تفاصيل المنتج - مصنع الأمان</h1>
+        <!-- أيقونة تغيير الوضع الليلي في أقصى اليسار -->
+        <button id="modeToggleButton" class="text-xl p-1 rounded-full text-gray-700">
+            <span id="modeToggleIcon" class="material-symbols-outlined">light_mode</span>
+        </button>
     </header>
 
-    <main class="container mx-auto py-8 px-4">
+    <main class="container mx-auto py-8 px-0">
         <div id="productDetailsContent" class="hidden max-w-3xl mx-auto">
             <section class="mb-8 text-center">
                 <h2 id="pitchTitle" class="text-5xl font-bold mb-4">عنوان خطاب المبيعات</h2>
