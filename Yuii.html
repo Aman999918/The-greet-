@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>إنشاء صفحة عرض - مصنع الأمان</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+    <link rel="stylesheet" href="ProductDetailsViewer.css">
+
+    <style>
+
+        /* أنماط خاصة بهذه الصفحة */
+
+        .step-section {
+
+            background-color: var(--card-light);
+
+            border-radius: 1rem;
+
+            padding: 2rem;
+
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+            transition: background-color 0.3s ease;
+
+        }
+
+        body.dark-mode .step-section {
+
+            background-color: var(--card-dark);
+
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+
+        }
+
+        .form-group {
+
+            margin-bottom: 1.5rem;
+
+        }
+
+        .form-group label {
+
+            display: block;
+
+            font-weight: bold;
+
+            margin-bottom: 0.5rem;
+
+            color: var(--text-dark);
+
+        }
+
+        body.dark-mode .form-group label {
+
+            color: var(--text-light);
+
+        }
+
+        .form-group input[type="text"],
+
+        .form-group textarea,
+
+        .form-group select {
+
+            width: 100%;
+
+            padding: 0.75rem;
+
+            border-radius: 0.5rem;
+
+            border: 1px solid var(--border-light);
+
+            background-color: var(--input-bg-light);
+
+            color: var(--input-text-light);
+
+            font-size: 1rem;
+
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+
+        }
+
+        body.dark-mode .form-group input[type="text"],
+
+        body.dark-mode .form-group textarea,
+
+        body.dark-mode .form-group select {
+
+            border-color: var(--border-dark);
+
+            background-color: var(--input-bg-dark);
+
+            color: var(--input-text-dark);
+
+        }
+
+        .form-group input[type="text"]:focus,
+
+        .form-group textarea:focus,
+
+        .form-group select:focus {
+
+            outline: none;
+
+            border-color: var(--primary-red);
+
+            box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
+
+        }
+
+        .dynamic-sections {
+
+            border: 1px dashed var(--border-light);
+
+            border-radius: 0.5rem;
+
+            padding: 1rem;
+
+        }
+
+        .dynamic-section-item {
+
+            background-color: var(--bg-light);
+
+            padding: 1rem;
+
+            border-radius: 0.5rem;
+
+            margin-bottom: 1rem;
+
+            position: relative;
+
+        }
+
+        body.dark-mode .dynamic-section-item {
+
+            background-color: #3b3b5b;
+
+        }
+
+        .dynamic-section-item .remove-btn {
+
+            position: absolute;
+
+            top: 0.5rem;
+
+            left: 0.5rem;
+
+            background: #e53e3e;
+
+            color: white;
+
+            border-radius: 50%;
+
+            width: 24px;
+
+            height: 24px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 12px;
+
+            cursor: pointer;
+
+            transition: background 0.2s ease;
+
+        }
+
+        .dynamic-section-item .remove-btn:hover {
+
+            background: #c53030;
+
+        }
+
+        .hidden {
+
+            display: none !important;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header id="mainHeader" class="bg-white shadow p-4 flex items-center justify-between">
+
+        <div class="relative">
+
+            <button id="menuDropdownButton" class="text-xl p-1 rounded-full text-gray-700">
+
+                <span id="menuDropdownIcon" class="material-symbols-outlined">arrow_drop_down</span>
+
+            </button>
+
+            <div id="menuDropdown" class="dropdown-menu">
+
+                <a href="Index.html" class="flex items-center"><span class="material-symbols-outlined text-gray-700">home</span> الرئيسية</a>
+
+                <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">shopping_cart</span> إدارة الطلبات</a>
+
+                <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">settings</span> الإعدادات</a>
+
+                <a href="#" class="flex items-center"><span class="material-symbols-outlined text-gray-700">info</span> عن التطبيق</a>
+
+                <a href="#" id="manageAccountLink" class="flex items-center"><span class="material-symbols-outlined text-gray-700">login</span> تسجيل الدخول / إدارة الحساب</a>
+
+            </div>
+
+        </div>
+
+        <h1 class="text-xl font-bold text-gray-800 text-center flex-1">إنشاء صفحة عرض</h1>
+
+        <button id="modeToggleButton" class="text-xl p-1 rounded-full text-gray-700">
+
+            <span id="modeToggleIcon" class="material-symbols-outlined">light_mode</span>
+
+        </button>
+
+    </header>
+
+    <main class="container mx-auto py-8 px-4">
+
+        <div id="loadingMessage" class="text-center text-lg text-gray-600 mt-10">
+
+            <span class="material-symbols-outlined animate-spin text-4xl text-blue-600">progress_activity</span>
+
+            <p class="mt-4">جاري تحميل البيانات...</p>
+
+        </div>
+
+        <div id="createPitchContent" class="hidden max-w-4xl mx-auto">
+
+            <section id="step1" class="step-section mb-8">
+
+                <h2 class="text-2xl font-bold mb-4 text-primary-red dark:text-light-red">الخطوة 1: اختر المنتج</h2>
+
+                <div class="form-group">
+
+                    <label for="productSelector">اختر المنتج الذي تريد إنشاء صفحة عرض له:</label>
+
+                    <select id="productSelector" class="w-full"></select>
+
+                </div>
+
+            </section>
+
+            <section id="step2" class="step-section hidden">
+
+                <h2 class="text-2xl font-bold mb-4 text-primary-red dark:text-light-red">الخطوة 2: أنشئ صفحة العرض</h2>
+
+                <form id="createPitchForm">
+
+                    <div class="form-group">
+
+                        <label for="pitchTitle">عنوان خطاب المبيعات:</label>
+
+                        <input type="text" id="pitchTitle" placeholder="مثال: الحل الشامل للأمن الصناعي" required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="pitchTagline">عبارة تسويقية (Tagline):</label>
+
+                        <input type="text" id="pitchTagline" placeholder="عبارة قصيرة وجذابة تلخص العرض">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="callToActionText">نص زر اتخاذ الإجراء:</label>
+
+                        <input type="text" id="callToActionText" placeholder="مثال: قدم طلبك الآن!" required>
+
+                    </div>
+
+                    <div id="dynamicSectionsContainer" class="dynamic-sections mt-6">
+
+                        <h3 class="text-xl font-bold mb-4 text-gray-700 dark:text-gray-200">أقسام المحتوى الإضافية</h3>
+
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mt-4">
+
+                        <button type="button" id="addDescriptionBtn" class="bg-blue-500 text-white py-2 px-4 rounded-md text-sm hover:bg-blue-600 transition">
+
+                            <span class="material-symbols-outlined align-middle">description</span>
+
+                            إضافة وصف
+
+                        </button>
+
+                        <button type="button" id="addImagesBtn" class="bg-blue-500 text-white py-2 px-4 rounded-md text-sm hover:bg-blue-600 transition">
+
+                            <span class="material-symbols-outlined align-middle">image</span>
+
+                            إضافة صور
+
+                        </button>
+
+                        <button type="button" id="addInfoCardBtn" class="bg-blue-500 text-white py-2 px-4 rounded-md text-sm hover:bg-blue-600 transition">
+
+                            <span class="material-symbols-outlined align-middle">info</span>
+
+                            إضافة بطاقة معلومات
+
+                        </button>
+
+                    </div>
+
+                    <button type="submit" class="w-full mt-8 bg-green-600 text-white py-3 rounded-md text-lg font-bold hover:bg-green-700 transition duration-300">
+
+                        حفظ صفحة العرض
+
+                    </button>
+
+                </form>
+
+            </section>
+
+        </div>
+
+        
+
+        <div id="errorMessage" class="hidden text-center text-red-600 text-lg mt-10">
+
+            <span class="material-symbols-outlined text-4xl">error</span>
+
+            <p class="mt-4">تعذر تحميل البيانات.</p>
+
+            <button id="goToHomePage" class="mt-6 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">العودة إلى الرئيسية</button>
+
+        </div>
+
+    </main>
+
+    <footer class="text-white p-6 text-center mt-8" style="background-color: #000000;">
+
+        <p class="text-sm opacity-70">&copy; 2025 مصنع الأمان. جميع الحقوق محفوظة.</p>
+
+        <p class="mt-2 text-xs opacity-60" id="userIdDisplay">هوية المستخدم: تحميل...</p>
+
+    </footer>
+
+    <div id="universalModal" class="modal-overlay">
+
+        <div class="modal-content">
+
+            <h3 id="modalTitle" class="text-lg font-bold mb-4"></h3>
+
+            <div id="modalContent" class="text-sm mb-4"></div>
+
+            <div id="modalActions" class="flex justify-center space-x-4"></div>
+
+            <div id="loadingIndicator" class="hidden text-center text-blue-600 text-sm mt-4">
+
+                <span class="material-symbols-outlined animate-spin mr-2">progress_activity</span> جاري التنفيذ...
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="module" src="CreatePitch.js"></script>
+
+</body>
+
+</html>
