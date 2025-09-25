@@ -39,6 +39,7 @@ let goToHomePageButton;
 let pitchTitleElement;
 let pitchTaglineElement;
 let dynamicSectionsContainer;
+let checkoutButton; // 👈 المتغير الجديد لزر العرض
 
 // دوال النافذة المنبثقة العامة (Universal Modal)
 function openModal(title, message, buttons = [], is_loading = false) {
@@ -92,9 +93,31 @@ function applyTheme() {
     modeToggleIcon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
 }
 
+// -------------------------------------------------------------------------
+// دالة لتحديث الرابط الديناميكي لزر الانتقال لصفحة العرض (الإضافة الجديدة)
+function updateCheckoutButton(productId) {
+    if (!checkoutButton || !productId) {
+        // إخفاء الزر إذا لم يتوفر معرف المنتج أو الزر نفسه
+        if (checkoutButton) {
+            checkoutButton.style.display = 'none'; 
+        }
+        return;
+    }
+    
+    // بناء الرابط: نفترض أن صفحة العرض هي 'checkout.html'
+    const checkoutUrl = `checkout.html?id=${productId}`;
+
+    checkoutButton.href = checkoutUrl;
+    checkoutButton.style.display = 'block'; // التأكد من إظهار الزر
+    console.log(`تم ربط زر العرض بنجاح: ${checkoutUrl}`);
+}
+// -------------------------------------------------------------------------
+
 // دالة لجلب وعرض خطاب المبيعات
 async function fetchAndDisplaySalesPitch(productId) {
     if (!currentUserId || !productId) {
+        // إخفاء الزر في حالة الخطأ أو عدم توفر المعرف
+        updateCheckoutButton(null); 
         errorMessage.classList.remove('hidden');
         loadingMessage.classList.add('hidden');
         productDetailsContent.classList.add('hidden');
@@ -107,6 +130,7 @@ async function fetchAndDisplaySalesPitch(productId) {
         const productDocRef = doc(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/products`, productId);
         const productSnap = await getDoc(productDocRef);
         if (!productSnap.exists()) {
+            updateCheckoutButton(null); // إخفاء الزر
             errorMessage.classList.remove('hidden');
             loadingMessage.classList.add('hidden');
             return;
@@ -200,12 +224,18 @@ async function fetchAndDisplaySalesPitch(productId) {
             noDynamicSectionsMessage.innerHTML = `<p class="p-4">لا توجد تفاصيل ديناميكية إضافية لهذا الخطاب.</p>`;
             dynamicSectionsContainer.appendChild(noDynamicSectionsMessage);
         }
+        
+        // -----------------------------------------------------------------
+        updateCheckoutButton(productId); // 👈 استدعاء الدالة لتحديث الزر بالمعرف
+        // -----------------------------------------------------------------
+        
         loadingMessage.classList.add('hidden');
         productDetailsContent.classList.remove('hidden');
         applyTheme();
         
     } catch (error) {
         console.error("خطأ في جلب أو عرض خطاب المبيعات:", error);
+        updateCheckoutButton(null); // إخفاء الزر في حالة الخطأ
         loadingMessage.classList.add('hidden');
         errorMessage.classList.remove('hidden');
         productDetailsContent.classList.add('hidden');
@@ -237,6 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pitchTitleElement = document.getElementById('pitchTitle');
     pitchTaglineElement = document.getElementById('pitchTagline');
     dynamicSectionsContainer = document.getElementById('dynamicSectionsContainer');
+    checkoutButton = document.getElementById('checkout-button'); // 👈 تعيين الزر هنا
     
     // عناصر DOM للقائمة المنسدلة (من Header)
     const menuDropdownButton = document.getElementById('menuDropdownButton');
@@ -307,6 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (productId) {
                     await fetchAndDisplaySalesPitch(productId);
                 } else {
+                    updateCheckoutButton(null); // إخفاء الزر
                     errorMessage.classList.remove('hidden');
                     loadingMessage.classList.add('hidden');
                     productDetailsContent.classList.add('hidden');
@@ -320,6 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (userIdDisplay) {
                         userIdDisplay.textContent = `فشل المصادقة: ${authError.message}`;
                     }
+                   updateCheckoutButton(null); // إخفاء الزر
                    errorMessage.classList.remove('hidden');
                     loadingMessage.classList.add('hidden');
                     productDetailsContent.classList.add('hidden');
@@ -328,6 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (initialError) {
             console.error("خطأ عام في تهيئة الصفحة:", initialError);
+            updateCheckoutButton(null); // إخفاء الزر
             errorMessage.classList.remove('hidden');
             loadingMessage.classList.add('hidden');
             productDetailsContent.classList.add('hidden');
