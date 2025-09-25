@@ -2,6 +2,8 @@
 :root {
     --primary-red: #ff0000;
     --light-red: #ffcccc;
+    --primary-blue: #007bff; /* افتراض قيمة لـ primary-blue */
+    --light-blue: #a3d9ff;   /* افتراض قيمة لـ light-blue */
     --text-dark: #333;
     --text-light: #f5f5f5;
     --bg-light: #f3f4f6;
@@ -194,6 +196,77 @@ body.dark-mode .dropdown-menu a .material-symbols-outlined {
     object-fit: cover;
 }
 
+/* --- أنماط زر الانتقال لصفحة العرض الديناميكي (الإضافة الجديدة) --- */
+
+/* حاوية الزر للتمركز والخلفية */
+.checkout-button-container {
+    margin-top: 2.5rem; /* مسافة عن المحتوى السابق */
+    margin-bottom: 2rem; 
+    max-width: 500px; 
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1rem; 
+    background-color: var(--card-light); 
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .checkout-button-container {
+    background-color: var(--card-dark); 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* الزر نفسه */
+#checkout-button {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 1rem 1.5rem; 
+    border-radius: 0.75rem; 
+    font-size: 1.5rem; 
+    font-weight: 700; 
+    text-decoration: none;
+    
+    /* الألوان الأساسية */
+    background-color: var(--primary-red); 
+    color: var(--text-light); 
+
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+/* تأثير التفاعل (Hover) */
+#checkout-button:hover {
+    background-color: #e60000; /* ظل أغمق للون الأحمر */
+    transform: scale(1.01); 
+    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.5); 
+}
+
+/* تأثير الوضع الليلي للزر */
+body.dark-mode #checkout-button {
+    background-color: var(--light-red); 
+    color: var(--text-dark); 
+}
+body.dark-mode #checkout-button:hover {
+    background-color: #ffb3b3; 
+    box-shadow: 0 4px 10px rgba(255, 204, 204, 0.3);
+}
+
+/* أنماط النص التمهيدي فوق الزر */
+.checkout-prompt {
+    text-align: center;
+    font-size: 1.125rem; 
+    font-weight: 600; 
+    color: var(--text-dark);
+    margin-bottom: 1rem; 
+}
+
+body.dark-mode .checkout-prompt {
+    color: var(--text-light);
+}
+
+/* --- نهاية أنماط زر الانتقال --- */
+
 /* استجابة الجوال */
 @media (max-width: 768px) {
     .container,
@@ -213,4 +286,4 @@ body.dark-mode .dropdown-menu a .material-symbols-outlined {
     .viewer-info-item {
         padding: 0.75rem;
     }
-}
+    }
