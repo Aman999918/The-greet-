@@ -39,7 +39,7 @@ let goToHomePageButton;
 let pitchTitleElement;
 let pitchTaglineElement;
 let dynamicSectionsContainer;
-let checkoutButton; // 👈 المتغير الجديد لزر العرض
+let checkoutButton; // المتغير الجديد لزر العرض
 
 // دوال النافذة المنبثقة العامة (Universal Modal)
 function openModal(title, message, buttons = [], is_loading = false) {
@@ -93,7 +93,6 @@ function applyTheme() {
     modeToggleIcon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
 }
 
-// -------------------------------------------------------------------------
 // دالة لتحديث الرابط الديناميكي لزر الانتقال لصفحة العرض (الإضافة الجديدة)
 function updateCheckoutButton(productId) {
     if (!checkoutButton || !productId) {
@@ -108,15 +107,14 @@ function updateCheckoutButton(productId) {
     const checkoutUrl = `checkout.html?id=${productId}`;
 
     checkoutButton.href = checkoutUrl;
-    checkoutButton.style.display = 'block'; // التأكد من إظهار الزر
+    // تم تغيير 'block' إلى 'inline-flex' ليتوافق مع التنسيق الدائري الجديد في CSS
+    checkoutButton.style.display = 'inline-flex'; 
     console.log(`تم ربط زر العرض بنجاح: ${checkoutUrl}`);
 }
-// -------------------------------------------------------------------------
 
 // دالة لجلب وعرض خطاب المبيعات
 async function fetchAndDisplaySalesPitch(productId) {
     if (!currentUserId || !productId) {
-        // إخفاء الزر في حالة الخطأ أو عدم توفر المعرف
         updateCheckoutButton(null); 
         errorMessage.classList.remove('hidden');
         loadingMessage.classList.add('hidden');
@@ -225,9 +223,7 @@ async function fetchAndDisplaySalesPitch(productId) {
             dynamicSectionsContainer.appendChild(noDynamicSectionsMessage);
         }
         
-        // -----------------------------------------------------------------
-        updateCheckoutButton(productId); // 👈 استدعاء الدالة لتحديث الزر بالمعرف
-        // -----------------------------------------------------------------
+        updateCheckoutButton(productId); // استدعاء الدالة لتحديث الزر بالمعرف
         
         loadingMessage.classList.add('hidden');
         productDetailsContent.classList.remove('hidden');
@@ -267,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     pitchTitleElement = document.getElementById('pitchTitle');
     pitchTaglineElement = document.getElementById('pitchTagline');
     dynamicSectionsContainer = document.getElementById('dynamicSectionsContainer');
-    checkoutButton = document.getElementById('checkout-button'); // 👈 تعيين الزر هنا
+    checkoutButton = document.getElementById('checkout-button'); // تعيين الزر هنا
     
     // عناصر DOM للقائمة المنسدلة (من Header)
     const menuDropdownButton = document.getElementById('menuDropdownButton');
