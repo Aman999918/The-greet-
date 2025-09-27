@@ -196,11 +196,11 @@ body.dark-mode .dropdown-menu a .material-symbols-outlined {
     object-fit: cover;
 }
 
-/* --- أنماط زر الانتقال لصفحة العرض الديناميكي (الإضافة الجديدة) --- */
+/* --- أنماط زر الانتقال لصفحة العرض الديناميكي (الإضافة والتعديل) --- */
 
 /* حاوية الزر للتمركز والخلفية */
 .checkout-button-container {
-    margin-top: 2.5rem; /* مسافة عن المحتوى السابق */
+    margin-top: 2.5rem; 
     margin-bottom: 2rem; 
     max-width: 500px; 
     margin-left: auto;
@@ -209,6 +209,11 @@ body.dark-mode .dropdown-menu a .material-symbols-outlined {
     background-color: var(--card-light); 
     border-radius: 0.5rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    
+    /* تعديل لتوسيط الزر والأيقونة في المنتصف */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 body.dark-mode .checkout-button-container {
@@ -216,16 +221,26 @@ body.dark-mode .checkout-button-container {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
 }
 
-/* الزر نفسه */
+/* الزر نفسه (تم تعديل ليكون أيقونة دائرية) */
 #checkout-button {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 1rem 1.5rem; 
-    border-radius: 0.75rem; 
-    font-size: 1.5rem; 
+    /* الإخفاء المبدئي للزر يتم هنا بواسطة CSS */
+    display: none; 
+    
+    /* التعديلات لجعله زر أيقونة دائري */
+    width: 65px;  
+    height: 65px; 
+    padding: 0; 
+    margin: 0; /* تم التوسيط عن طريق الحاوية */
+    
+    border-radius: 50%; 
+    font-size: 2.5rem; /* لتكبير الأيقونة داخله */
     font-weight: 700; 
     text-decoration: none;
+    
+    /* خصائص الـ Flex لتوسيط الأيقونة تماماً في منتصف الزر الدائري */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     
     /* الألوان الأساسية */
     background-color: var(--primary-red); 
@@ -238,8 +253,8 @@ body.dark-mode .checkout-button-container {
 /* تأثير التفاعل (Hover) */
 #checkout-button:hover {
     background-color: #e60000; /* ظل أغمق للون الأحمر */
-    transform: scale(1.01); 
-    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.5); 
+    transform: scale(1.05); 
+    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.7); 
 }
 
 /* تأثير الوضع الليلي للزر */
@@ -286,4 +301,4 @@ body.dark-mode .checkout-prompt {
     .viewer-info-item {
         padding: 0.75rem;
     }
-    }
+}
