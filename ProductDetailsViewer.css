@@ -210,7 +210,6 @@ body.dark-mode .dropdown-menu a .material-symbols-outlined {
     border-radius: 0.5rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     
-    /* تعديل لتوسيط الزر والأيقونة في المنتصف */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -230,10 +229,10 @@ body.dark-mode .checkout-button-container {
     width: 65px;  
     height: 65px; 
     padding: 0; 
-    margin: 0; /* تم التوسيط عن طريق الحاوية */
+    margin: 0; 
     
     border-radius: 50%; 
-    font-size: 2.5rem; /* لتكبير الأيقونة داخله */
+    font-size: 2.5rem; 
     font-weight: 700; 
     text-decoration: none;
     
@@ -242,12 +241,37 @@ body.dark-mode .checkout-button-container {
     justify-content: center;
     align-items: center;
     
+    /* الخصائص المطلوبة لتبديل الأيقونات */
+    position: relative; /* 👈 هام للأيقونات الداخلية */
+    overflow: hidden; 
+    
     /* الألوان الأساسية */
     background-color: var(--primary-red); 
     color: var(--text-light); 
 
     transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
+}
+
+/* أنماط الأيقونات لتبديل الحالة المرئية */
+#checkout-button .material-symbols-outlined {
+    transition: opacity 0.5s ease, transform 0.5s ease; /* تأثير التلاشي والحجم */
+    position: absolute; /* وضعها فوق بعضها */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* توسيط حقيقي لكل أيقونة */
+}
+
+/* حالة الإخفاء: تكون شفافة وأصغر قليلاً */
+.hidden-icon {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+}
+
+/* حالة الظهور: تكون معتمة بحجمها الطبيعي */
+.icon-primary {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1); 
 }
 
 /* تأثير التفاعل (Hover) */
