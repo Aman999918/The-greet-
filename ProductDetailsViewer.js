@@ -39,7 +39,9 @@ let goToHomePageButton;
 let pitchTitleElement;
 let pitchTaglineElement;
 let dynamicSectionsContainer;
-let checkoutButton; // المتغير الجديد لزر العرض
+let checkoutButton; 
+let iconRocket; // 👈 متغير الأيقونة الأولى
+let iconArrow;  // 👈 متغير الأيقونة الثانية
 
 // دوال النافذة المنبثقة العامة (Universal Modal)
 function openModal(title, message, buttons = [], is_loading = false) {
@@ -93,7 +95,7 @@ function applyTheme() {
     modeToggleIcon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
 }
 
-// دالة لتحديث الرابط الديناميكي لزر الانتقال لصفحة العرض (الإضافة الجديدة)
+// دالة لتحديث الرابط الديناميكي لزر الانتقال لصفحة العرض 
 function updateCheckoutButton(productId) {
     if (!checkoutButton || !productId) {
         // إخفاء الزر إذا لم يتوفر معرف المنتج أو الزر نفسه
@@ -103,13 +105,40 @@ function updateCheckoutButton(productId) {
         return;
     }
     
-    // بناء الرابط: نفترض أن صفحة العرض هي 'checkout.html'
+    // بناء الرابط
     const checkoutUrl = `checkout.html?id=${productId}`;
 
     checkoutButton.href = checkoutUrl;
-    // تم تغيير 'block' إلى 'inline-flex' ليتوافق مع التنسيق الدائري الجديد في CSS
+    // استخدام inline-flex ليتناسب مع التوسيط الدائري
     checkoutButton.style.display = 'inline-flex'; 
     console.log(`تم ربط زر العرض بنجاح: ${checkoutUrl}`);
+}
+
+// دالة تشغيل تأثير تبديل الأيقونات (الإضافة الجديدة)
+function animateCheckoutButton() {
+    if (!iconRocket || !iconArrow) return;
+    
+    // إعادة ضبط الحالة الأولية لضمان عمل الحركة بعد تحديث الصفحة
+    iconRocket.classList.add('icon-primary');
+    iconRocket.classList.remove('hidden-icon');
+    iconArrow.classList.add('hidden-icon');
+    iconArrow.classList.remove('icon-primary');
+
+    const delayTime = 3000; // 3000 مللي ثانية = 3 ثوانٍ
+    
+    // وظيفة تبديل الأيقونات
+    const switchIcons = () => {
+        // إخفاء الصاروخ
+        iconRocket.classList.add('hidden-icon');
+        iconRocket.classList.remove('icon-primary');
+
+        // إظهار السهم
+        iconArrow.classList.add('icon-primary');
+        iconArrow.classList.remove('hidden-icon');
+    };
+
+    // تشغيل التبديل لمرة واحدة بعد مهلة محددة
+    setTimeout(switchIcons, delayTime);
 }
 
 // دالة لجلب وعرض خطاب المبيعات
@@ -223,7 +252,8 @@ async function fetchAndDisplaySalesPitch(productId) {
             dynamicSectionsContainer.appendChild(noDynamicSectionsMessage);
         }
         
-        updateCheckoutButton(productId); // استدعاء الدالة لتحديث الزر بالمعرف
+        updateCheckoutButton(productId); 
+        animateCheckoutButton(); // 👈 تشغيل الحركة
         
         loadingMessage.classList.add('hidden');
         productDetailsContent.classList.remove('hidden');
@@ -263,7 +293,10 @@ document.addEventListener('DOMContentLoaded', () => {
     pitchTitleElement = document.getElementById('pitchTitle');
     pitchTaglineElement = document.getElementById('pitchTagline');
     dynamicSectionsContainer = document.getElementById('dynamicSectionsContainer');
-    checkoutButton = document.getElementById('checkout-button'); // تعيين الزر هنا
+    checkoutButton = document.getElementById('checkout-button'); 
+    
+    iconRocket = document.getElementById('icon-rocket'); // 👈 تعيين الأيقونة الأولى
+    iconArrow = document.getElementById('icon-arrow');   // 👈 تعيين الأيقونة الثانية
     
     // عناصر DOM للقائمة المنسدلة (من Header)
     const menuDropdownButton = document.getElementById('menuDropdownButton');
