@@ -40,8 +40,11 @@ let pitchTitleElement;
 let pitchTaglineElement;
 let dynamicSectionsContainer;
 let checkoutButton; 
-let iconRocket; // 👈 متغير الأيقونة الأولى
-let iconArrow;  // 👈 متغير الأيقونة الثانية
+let iconRocket; 
+let iconArrow;  
+
+// متغير لتخزين معرّف الدائرة الزمنية
+let iconCycleIntervalId = null; 
 
 // دوال النافذة المنبثقة العامة (Universal Modal)
 function openModal(title, message, buttons = [], is_loading = false) {
@@ -114,32 +117,70 @@ function updateCheckoutButton(productId) {
     console.log(`تم ربط زر العرض بنجاح: ${checkoutUrl}`);
 }
 
-// دالة تشغيل تأثير تبديل الأيقونات (الإضافة الجديدة)
-function animateCheckoutButton() {
-    if (!iconRocket || !iconArrow) return;
+// دالة تشغيل دائرة تبديل الأيقونات بشكل مستمر
+function startIconCycle() {
+    // 👈 جلب العناصر محلياً للتأكد من توافرها
+    const rocket = document.getElementById('icon-rocket');
+    const arrow = document.getElementById('icon-arrow');
     
-    // إعادة ضبط الحالة الأولية لضمان عمل الحركة بعد تحديث الصفحة
-    iconRocket.classList.add('icon-primary');
-    iconRocket.classList.remove('hidden-icon');
-    iconArrow.classList.add('hidden-icon');
-    iconArrow.classList.remove('icon-primary');
+    if (!rocket || !arrow) {
+        console.error("فشل في العثور على أيقونات الحركة.");
+        // إذا فشل، نوقف أي محاولة تشغيل لاحقة
+        if (iconCycleIntervalId) {
+            clearTimeout(iconCycleIntervalId);
+            iconCycleIntervalId = null;
+        }
+        return;
+    }
+    
+    // إيقاف أي دورة سابقة للتأكد من عدم التكرار المزدوج
+    if (iconCycleIntervalId) {
+        clearTimeout(iconCycleIntervalId);
+    }
 
-    const delayTime = 3000; // 3000 مللي ثانية = 3 ثوانٍ
+    let isRocketVisible = true; // الحالة الأولية: الصاروخ ظاهر (3 ثوانٍ)
     
-    // وظيفة تبديل الأيقونات
+    // دالة التبديل الفعلية
     const switchIcons = () => {
-        // إخفاء الصاروخ
-        iconRocket.classList.add('hidden-icon');
-        iconRocket.classList.remove('icon-primary');
+        if (isRocketVisible) {
+            // الانتقال من الصاروخ إلى السهم
+            
+            // إخفاء الصاروخ
+            rocket.classList.remove('icon-primary');
+            rocket.classList.add('hidden-icon');
 
-        // إظهار السهم
-        iconArrow.classList.add('icon-primary');
-        iconArrow.classList.remove('hidden-icon');
+            // إظهار السهم
+            arrow.classList.remove('hidden-icon');
+            arrow.classList.add('icon-primary');
+
+            isRocketVisible = false;
+            // تعيين المهلة التالية (للسهم): 5 ثوانٍ
+            iconCycleIntervalId = setTimeout(switchIcons, 5000); 
+            console.log("التبديل: من الصاروخ (3s) إلى السهم. المهلة القادمة: 5 ثوانٍ.");
+
+        } else {
+            // الانتقال من السهم إلى الصاروخ
+            
+            // إخفاء السهم
+            arrow.classList.remove('icon-primary');
+            arrow.classList.add('hidden-icon');
+
+            // إظهار الصاروخ
+            rocket.classList.remove('hidden-icon');
+            rocket.classList.add('icon-primary');
+
+            isRocketVisible = true;
+            // تعيين المهلة التالية (للصاروخ): 3 ثوانٍ
+            iconCycleIntervalId = setTimeout(switchIcons, 3000); 
+            console.log("التبديل: من السهم (5s) إلى الصاروخ. المهلة القادمة: 3 ثوانٍ.");
+        }
     };
-
-    // تشغيل التبديل لمرة واحدة بعد مهلة محددة
-    setTimeout(switchIcons, delayTime);
+    
+    // البدء بالدورة الأولى (ننتظر 3 ثوانٍ قبل التبديل الأول)
+    iconCycleIntervalId = setTimeout(switchIcons, 3000); 
+    console.log("بدء دورة الأيقونات. الصاروخ مرئي لمدة 3 ثوانٍ أولاً.");
 }
+
 
 // دالة لجلب وعرض خطاب المبيعات
 async function fetchAndDisplaySalesPitch(productId) {
@@ -253,7 +294,7 @@ async function fetchAndDisplaySalesPitch(productId) {
         }
         
         updateCheckoutButton(productId); 
-        animateCheckoutButton(); // 👈 تشغيل الحركة
+        startIconCycle(); // 👈 تشغيل الدائرة الجديدة
         
         loadingMessage.classList.add('hidden');
         productDetailsContent.classList.remove('hidden');
@@ -295,8 +336,8 @@ document.addEventListener('DOMContentLoaded', () => {
     dynamicSectionsContainer = document.getElementById('dynamicSectionsContainer');
     checkoutButton = document.getElementById('checkout-button'); 
     
-    iconRocket = document.getElementById('icon-rocket'); // 👈 تعيين الأيقونة الأولى
-    iconArrow = document.getElementById('icon-arrow');   // 👈 تعيين الأيقونة الثانية
+    iconRocket = document.getElementById('icon-rocket'); 
+    iconArrow = document.getElementById('icon-arrow');   
     
     // عناصر DOM للقائمة المنسدلة (من Header)
     const menuDropdownButton = document.getElementById('menuDropdownButton');
