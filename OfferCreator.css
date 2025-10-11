@@ -1,0 +1,139 @@
+/* ========================================================= */
+
+/* OfferCreator.css - التناسق الأحمر والأبيض */
+
+/* ========================================================= */
+
+:root {
+
+    --primary-red: #d90429; 
+
+    --light-red: #ff5c7c;
+
+    --success-green: #10b981; 
+
+    
+
+    --bg-light: #f3f4f6; 
+
+    --card-light: #ffffff; 
+
+    --text-dark: #333;
+
+    --border-light: #e5e7eb;
+
+}
+
+body {
+
+    font-family: 'Arial', sans-serif;
+
+    background-color: var(--bg-light);
+
+    color: var(--text-dark);
+
+    direction: rtl;
+
+}
+
+/* أنماط حقول الإدخال القياسية */
+
+.input-label {
+
+    display: block;
+
+    font-weight: 600;
+
+    margin-bottom: 0.5rem;
+
+    color: var(--text-dark);
+
+}
+
+.input-field {
+
+    width: 100%;
+
+    /* تم نقل معظم التنسيق إلى HTML و style لضمان التطبيق */
+
+    background-color: white;
+
+    color: var(--text-dark);
+
+    transition: border-color 0.3s ease;
+
+}
+
+/* نمط بطاقة لكل قسم (يشمل الأقسام العادية والحجج الإقناعية) */
+
+.dynamic-section-card {
+
+    background-color: var(--card-light);
+
+    border: 1px solid var(--border-light);
+
+    padding: 1rem;
+
+    border-radius: 0.5rem;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    margin-bottom: 1rem;
+
+    transition: all 0.3s ease-out; 
+
+}
+
+.dynamic-section-card h4 {
+
+    color: var(--primary-red);
+
+    font-weight: bold;
+
+    margin-bottom: 0.5rem;
+
+}
+
+/* نمط زر الحذف (مهم لـ JS) */
+
+.delete-section-btn, .delete-argument-btn {
+
+    color: white;
+
+    background-color: #ef4444; /* أحمر حاد للحذف */
+
+    border-radius: 0.25rem;
+
+    padding: 0.25rem 0.5rem;
+
+    font-size: 0.875rem;
+
+    transition: background-color 0.2s;
+
+}
+
+.delete-section-btn:hover, .delete-argument-btn:hover {
+
+    background-color: #dc2626;
+
+}
+
+/* تنسيقات الألوان الرئيسية (للتأكد من عملها إذا لم يعمل المضمن) */
+
+.bg-red-500, #addSectionButton, #addClosingArgumentButton {
+
+    background-color: var(--primary-red);
+
+}
+
+.bg-red-700, #saveOfferButton {
+
+    background-color: #a30322; /* لون أغمق قليلاً للزر النهائي */
+
+}
+
+.text-green-600 {
+
+    color: var(--success-green);
+
+}
