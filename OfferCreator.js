@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/esm-b
 
 // **إعدادات Firebase الخاصة بمشروعك "aman-safety"**
 const firebaseConfig = {
-  // يجب استبدال هذا بالإعدادات الحقيقية لمشروعك
+  // يرجى التأكد من أن هذه الإعدادات مطابقة للإعدادات الفعلية
   apiKey: "AIzaSyBRMKKR7URejme05AJ9-ufnj9Ehcg67Pfg", 
   authDomain: "aman-safety.firebaseapp.com",
   projectId: "aman-safety",
@@ -39,21 +39,27 @@ const copyLinkButton = document.getElementById('copyLinkButton');
 
 
 /* ========================================================= */
-/* دالة جلب المنتجات لملء القائمة المنسدلة (مُعدّلة) */
+/* دالة جلب المنتجات لملء القائمة المنسدلة (مُعدّلة باستخدام المسار الصحيح) */
 /* ========================================================= */
 
 async function populateProductSelect() {
     productIdSelect.innerHTML = '<option value="" disabled selected>... جاري تحميل المنتجات ...</option>';
-    statusMessage.classList.add('hidden'); // إخفاء الرسائل السابقة
+    statusMessage.classList.add('hidden'); 
+
+    if (!currentUserId) {
+        // في حال عدم انتهاء المصادقة بعد
+        productIdSelect.innerHTML = '<option value="" disabled selected>جاري المصادقة...</option>';
+        return; 
+    }
 
     try {
-        // المسار المستهدف: 'products'
-        const productsCol = collection(db, 'products');
+        // **الإصلاح الجذري:** استخدام مسار الـ Sub-Collection: artifacts/[appId]/users/[userId]/products
+        const productsCol = collection(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/products`);
         const productSnapshot = await getDocs(productsCol);
 
         if (productSnapshot.empty) {
             productIdSelect.innerHTML = '<option value="" disabled selected>لا توجد منتجات متاحة</option>';
-            statusMessage.textContent = 'تنبيه: لا توجد منتجات مُضافة في مسار "products".';
+            statusMessage.textContent = 'تنبيه: لا توجد منتجات مُضافة في حسابك الخاص.';
             statusMessage.className = 'text-center mt-3 error';
             statusMessage.classList.remove('hidden');
             return;
@@ -68,7 +74,7 @@ async function populateProductSelect() {
         
         productIdSelect.innerHTML = optionsHtml;
         
-        // إظهار رسالة نجاح مؤقتة
+        // إظهار رسالة نجاح مؤقتة (إحساس سمعي بالانتهاء)
         statusMessage.textContent = 'تم تحميل قائمة المنتجات بنجاح.';
         statusMessage.className = 'text-center mt-3 success';
         setTimeout(() => statusMessage.classList.add('hidden'), 2000);
@@ -76,6 +82,7 @@ async function populateProductSelect() {
     } catch (error) {
         console.error("خطأ حاسم في جلب المنتجات:", error);
         productIdSelect.innerHTML = '<option value="" disabled selected>فشل تحميل المنتجات (راجع الأذونات)</option>';
+        // تذكير المستخدم بضرورة فحص قوانين الأمان
         statusMessage.textContent = `فشل تحميل المنتجات: ${error.message}. (تحقق من قوانين أمان Firebase).`;
         statusMessage.className = 'text-center mt-3 error';
         statusMessage.classList.remove('hidden');
@@ -149,6 +156,7 @@ function deleteClosingArgument(event) {
     const argumentElement = document.getElementById(argumentId);
     
     if (argumentElement) {
+        // تأثير حسي: اختفاء ناعم قبل الحذف
         argumentElement.style.opacity = 0;
         setTimeout(() => {
             argumentElement.remove();
@@ -235,7 +243,7 @@ function deleteSection(event) {
 
 function collectOfferData() {
     const offerData = {
-        productId: productIdSelect.value, // جلب الـ ID من القائمة المنسدلة
+        productId: productIdSelect.value, 
         title: document.getElementById('offerTitle').value,
         tagline: document.getElementById('offerTagline').value,
         unitPrice: parseFloat(unitPriceInput.value) || 0,
@@ -354,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. إدارة الأقسام
     addSectionButton.addEventListener('click', addDynamicSection);
     
-    // **ربط زر الحجج الإقناعية (الإصلاح)**
+    // **ربط زر الحجج الإقناعية (الإصلاح السابق)**
     const addArgumentButton = document.getElementById('addClosingArgumentButton');
     if (addArgumentButton) {
         addArgumentButton.addEventListener('click', addClosingArgument);
@@ -394,4 +402,4 @@ document.addEventListener('DOMContentLoaded', () => {
         // بعد المصادقة، قم بتحميل قائمة المنتجات
         populateProductSelect();
     });
-}); 
+});
