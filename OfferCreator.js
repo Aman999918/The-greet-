@@ -1,18 +1,18 @@
 // استيراد مكتبات Firebase 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-// تم إضافة onSnapshot المطلوبة من ملفك
-import { getFirestore, doc, setDoc, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js"; 
+// استخدام onSnapshot لجلب البيانات بشكل لحظي كما في ملفك
+import { getFirestore, doc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js"; 
 import { v4 as uuidv4 } from 'https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/esm-browser/v4.js';
 
 // **إعدادات Firebase الخاصة بمشروعك "aman-safety"**
+// يفضل استخدام هذه الطريقة في بيئة العمل للحفاظ على نفس الإعدادات
 const firebaseConfig = {
-  // يرجى التأكد من أن هذه الإعدادات مطابقة للإعدادات الفعلية
   apiKey: "AIzaSyBRMKKR7URejme05AJ9-ufnj9Ehcg67Pfg", 
   authDomain: "aman-safety.firebaseapp.com",
   projectId: "aman-safety",
   messagingSenderId: "16880858",
-  appId: "1:168805958858:web:bccc84abcf58aa180132033",
+  appId: "1:168805958858:web:bccc84abcf58aa180132033", // يجب أن يكون هذا الـ appId هو نفسه المستخدم في الكود الآخر
   measurementId: "G-N6DDZ6N7GW"
 };
 
@@ -60,15 +60,15 @@ function renderProductsSelect() {
     
     productIdSelect.innerHTML = optionsHtml;
     
-    // إظهار رسالة نجاح مؤقتة
-    statusMessage.textContent = 'تم تحميل قائمة المنتجات بنجاح. (إحساس بالراحة)';
+    // إحساس بصري وسمعي بالانتهاء
+    statusMessage.textContent = 'تم تحميل قائمة المنتجات بنجاح. (استمتع بالعمل)';
     statusMessage.className = 'text-center mt-3 success';
     setTimeout(() => statusMessage.classList.add('hidden'), 2000);
 }
 
 
 /* ========================================================= */
-/* دالة جلب المنتجات (باستخدام onSnapshot كما في ملفك) */
+/* دالة جلب المنتجات (باستخدام onSnapshot) */
 /* ========================================================= */
 
 function populateProductSelect() {
@@ -76,16 +76,17 @@ function populateProductSelect() {
     statusMessage.classList.add('hidden'); 
 
     if (!currentUserId) {
-        // إذا لم يكن المستخدم مصادقاً بعد
-        productIdSelect.innerHTML = '<option value="" disabled selected>جاري المصادقة...</option>';
+        // هذا الشرط لن يتم تنفيذه عملياً بعد التعديل الأخير في التوقيت
+        productIdSelect.innerHTML = '<option value="" disabled selected>خطأ: لم يتم تحديد هوية المستخدم بعد.</option>';
         return; 
     }
 
     try {
-        // المسار الصحيح: artifacts/[appId]/users/[userId]/products
+        // **المسار الذي يعمل في ملفك الآخر (تم التأكيد عليه)**
+        // artifacts/[appId]/users/[userId]/products
         const productsCol = collection(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/products`);
         
-        // **الإصلاح:** استخدام onSnapshot لضمان جلب البيانات فور توفرها
+        // استخدام onSnapshot لضمان التزامن اللحظي
         onSnapshot(productsCol, (snapshot) => {
             productsListData = [];
             snapshot.forEach(doc => {
@@ -96,7 +97,7 @@ function populateProductSelect() {
              // معالجة الأخطاء (عادةً بسبب قواعد الأمان)
             console.error("خطأ في جلب المنتجات عبر onSnapshot:", error);
             productIdSelect.innerHTML = '<option value="" disabled selected>فشل تحميل المنتجات (راجع الأذونات)</option>';
-            statusMessage.textContent = `فشل تحميل المنتجات: ${error.message}. (تحقق من قوانين أمان Firebase).`;
+            statusMessage.textContent = `فشل تحميل المنتجات: ${error.message}.`;
             statusMessage.className = 'text-center mt-3 error';
             statusMessage.classList.remove('hidden');
         });
@@ -199,7 +200,6 @@ function addDynamicSection() {
         initialMessage.remove();
     }
     
-    // ... (منطق إضافة القسم، مشابه للسابق) ...
     const sectionHtml = `
         <div id="${sectionId}" class="dynamic-section-card relative">
             <h4 class="flex items-center gap-2">
@@ -255,7 +255,7 @@ function deleteSection(event) {
 
 
 /* ========================================================= */
-/* دالة تجميع البيانات وحفظ العرض (لم تتغير) */
+/* دالة تجميع البيانات وحفظ العرض */
 /* ========================================================= */
 
 function collectOfferData() {
@@ -367,7 +367,7 @@ async function saveOffer(event) {
 
 
 /* ========================================================= */
-/* الأحداث والمصادقة */
+/* الأحداث والمصادقة (التعديل الحاسم في التوقيت) */
 /* ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -402,6 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 5. مصادقة Firebase وجلب المنتجات
+    // **التعديل الحاسم:** تأخير نداء populateProductSelect حتى يتم تعيين currentUserId يقيناً.
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUserId = user.uid;
@@ -412,12 +413,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentUserId = credential.user.uid;
             } catch (authError) {
                 console.error("فشل المصادقة المجهولة:", authError);
+                // رسالة واضحة للمستخدم
                 statusMessage.textContent = 'تعذر المصادقة. لن تتمكن من حفظ العرض.';
                 statusMessage.className = 'text-center mt-3 error';
                 saveOfferButton.disabled = true;
+                currentUserId = null; // تأكيد عدم وجود ID
+                return;
             }
         }
-        // بعد المصادقة، قم بتحميل قائمة المنتجات باستخدام الطريقة الفعالة
-        populateProductSelect();
+        // إطلاق دالة الجلب فقط بعد التأكد من وجود currentUserId
+        if (currentUserId) {
+             populateProductSelect();
+        }
     });
-}); 
+});
+ 
