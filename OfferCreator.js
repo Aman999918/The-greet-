@@ -1,7 +1,8 @@
 // استيراد مكتبات Firebase 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+// تم إضافة onSnapshot المطلوبة من ملفك
+import { getFirestore, doc, setDoc, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js"; 
 import { v4 as uuidv4 } from 'https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/esm-browser/v4.js';
 
 // **إعدادات Firebase الخاصة بمشروعك "aman-safety"**
@@ -19,6 +20,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 let currentUserId = null; 
+let productsListData = []; // لتخزين المنتجات
 
 // العناصر الأساسية للـ DOM
 const productIdSelect = document.getElementById('productIdSelect'); 
@@ -39,53 +41,68 @@ const copyLinkButton = document.getElementById('copyLinkButton');
 
 
 /* ========================================================= */
-/* دالة جلب المنتجات لملء القائمة المنسدلة (مُعدّلة باستخدام المسار الصحيح) */
+/* دالة ملء القائمة المنسدلة بناءً على بيانات productsListData */
+/* ========================================================= */
+function renderProductsSelect() {
+    if (productsListData.length === 0) {
+        productIdSelect.innerHTML = '<option value="" disabled selected>لا توجد منتجات متاحة</option>';
+        statusMessage.textContent = 'تنبيه: لا توجد منتجات مُضافة في حسابك الخاص.';
+        statusMessage.className = 'text-center mt-3 error';
+        statusMessage.classList.remove('hidden');
+        return;
+    }
+
+    let optionsHtml = '<option value="" disabled selected>اختر المنتج المستهدف</option>';
+    productsListData.forEach(product => {
+        const productName = product.name || 'منتج غير مسمى';
+        optionsHtml += `<option value="${product.id}">${productName} (ID: ${product.id.substring(0, 8)}...)</option>`;
+    });
+    
+    productIdSelect.innerHTML = optionsHtml;
+    
+    // إظهار رسالة نجاح مؤقتة
+    statusMessage.textContent = 'تم تحميل قائمة المنتجات بنجاح. (إحساس بالراحة)';
+    statusMessage.className = 'text-center mt-3 success';
+    setTimeout(() => statusMessage.classList.add('hidden'), 2000);
+}
+
+
+/* ========================================================= */
+/* دالة جلب المنتجات (باستخدام onSnapshot كما في ملفك) */
 /* ========================================================= */
 
-async function populateProductSelect() {
+function populateProductSelect() {
     productIdSelect.innerHTML = '<option value="" disabled selected>... جاري تحميل المنتجات ...</option>';
     statusMessage.classList.add('hidden'); 
 
     if (!currentUserId) {
-        // في حال عدم انتهاء المصادقة بعد
+        // إذا لم يكن المستخدم مصادقاً بعد
         productIdSelect.innerHTML = '<option value="" disabled selected>جاري المصادقة...</option>';
         return; 
     }
 
     try {
-        // **الإصلاح الجذري:** استخدام مسار الـ Sub-Collection: artifacts/[appId]/users/[userId]/products
+        // المسار الصحيح: artifacts/[appId]/users/[userId]/products
         const productsCol = collection(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/products`);
-        const productSnapshot = await getDocs(productsCol);
-
-        if (productSnapshot.empty) {
-            productIdSelect.innerHTML = '<option value="" disabled selected>لا توجد منتجات متاحة</option>';
-            statusMessage.textContent = 'تنبيه: لا توجد منتجات مُضافة في حسابك الخاص.';
+        
+        // **الإصلاح:** استخدام onSnapshot لضمان جلب البيانات فور توفرها
+        onSnapshot(productsCol, (snapshot) => {
+            productsListData = [];
+            snapshot.forEach(doc => {
+                productsListData.push({ id: doc.id, ...doc.data() });
+            });
+            renderProductsSelect(); // استدعاء دالة الرسم بعد تحديث البيانات
+        }, (error) => {
+             // معالجة الأخطاء (عادةً بسبب قواعد الأمان)
+            console.error("خطأ في جلب المنتجات عبر onSnapshot:", error);
+            productIdSelect.innerHTML = '<option value="" disabled selected>فشل تحميل المنتجات (راجع الأذونات)</option>';
+            statusMessage.textContent = `فشل تحميل المنتجات: ${error.message}. (تحقق من قوانين أمان Firebase).`;
             statusMessage.className = 'text-center mt-3 error';
             statusMessage.classList.remove('hidden');
-            return;
-        }
-
-        let optionsHtml = '<option value="" disabled selected>اختر المنتج المستهدف</option>';
-        productSnapshot.forEach(doc => {
-            const product = doc.data();
-            const productName = product.name || 'منتج غير مسمى';
-            optionsHtml += `<option value="${doc.id}">${productName} (ID: ${doc.id.substring(0, 8)}...)</option>`;
         });
-        
-        productIdSelect.innerHTML = optionsHtml;
-        
-        // إظهار رسالة نجاح مؤقتة (إحساس سمعي بالانتهاء)
-        statusMessage.textContent = 'تم تحميل قائمة المنتجات بنجاح.';
-        statusMessage.className = 'text-center mt-3 success';
-        setTimeout(() => statusMessage.classList.add('hidden'), 2000);
 
     } catch (error) {
-        console.error("خطأ حاسم في جلب المنتجات:", error);
-        productIdSelect.innerHTML = '<option value="" disabled selected>فشل تحميل المنتجات (راجع الأذونات)</option>';
-        // تذكير المستخدم بضرورة فحص قوانين الأمان
-        statusMessage.textContent = `فشل تحميل المنتجات: ${error.message}. (تحقق من قوانين أمان Firebase).`;
-        statusMessage.className = 'text-center mt-3 error';
-        statusMessage.classList.remove('hidden');
+        console.error("خطأ في إعداد مستمع onSnapshot:", error);
     }
 }
 
@@ -156,7 +173,6 @@ function deleteClosingArgument(event) {
     const argumentElement = document.getElementById(argumentId);
     
     if (argumentElement) {
-        // تأثير حسي: اختفاء ناعم قبل الحذف
         argumentElement.style.opacity = 0;
         setTimeout(() => {
             argumentElement.remove();
@@ -169,7 +185,7 @@ function deleteClosingArgument(event) {
 
 
 /* ========================================================= */
-/* دوال إدارة الأقسام الإضافية (الشروط/المزايا) */
+/* دوال إدارة الأقسام الإضافية (الشروط/المزايا) - مختصرة */
 /* ========================================================= */
 
 let sectionCounter = 0; 
@@ -183,6 +199,7 @@ function addDynamicSection() {
         initialMessage.remove();
     }
     
+    // ... (منطق إضافة القسم، مشابه للسابق) ...
     const sectionHtml = `
         <div id="${sectionId}" class="dynamic-section-card relative">
             <h4 class="flex items-center gap-2">
@@ -238,7 +255,7 @@ function deleteSection(event) {
 
 
 /* ========================================================= */
-/* دالة تجميع البيانات وحفظ العرض */
+/* دالة تجميع البيانات وحفظ العرض (لم تتغير) */
 /* ========================================================= */
 
 function collectOfferData() {
@@ -350,7 +367,7 @@ async function saveOffer(event) {
 
 
 /* ========================================================= */
-/* الأحداث والمصادقة (بما في ذلك ربط الزر الصحيح) */
+/* الأحداث والمصادقة */
 /* ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -362,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. إدارة الأقسام
     addSectionButton.addEventListener('click', addDynamicSection);
     
-    // **ربط زر الحجج الإقناعية (الإصلاح السابق)**
+    // ربط زر الحجج الإقناعية 
     const addArgumentButton = document.getElementById('addClosingArgumentButton');
     if (addArgumentButton) {
         addArgumentButton.addEventListener('click', addClosingArgument);
@@ -390,6 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentUserId = user.uid;
         } else {
             try {
+                // تسجيل الدخول المجهول
                 const credential = await signInAnonymously(auth);
                 currentUserId = credential.user.uid;
             } catch (authError) {
@@ -399,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveOfferButton.disabled = true;
             }
         }
-        // بعد المصادقة، قم بتحميل قائمة المنتجات
+        // بعد المصادقة، قم بتحميل قائمة المنتجات باستخدام الطريقة الفعالة
         populateProductSelect();
     });
-});
+}); 
