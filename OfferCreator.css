@@ -1,139 +1,132 @@
-/* ========================================================= */
+/* ========================================= */
+/* استيراد خطوط Google Icons (لضمان ظهور الأيقونات) */
+/* ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-/* OfferCreator.css - التناسق الأحمر والأبيض */
+/* ========================================= */
+/* الأنماط العامة وإعادة التعيين (إذا لم تستخدم Tailwind) */
+/* ========================================= */
+body { 
+    font-family: 'Arial', sans-serif; 
+    background-color: #f4f4f9; 
+    padding: 20px;
+    margin: 0;
+}
+/* تنسيق العناصر الشائعة لتجنب أخطاء العرض */
+.grid { display: grid; }
+.col-span-full { grid-column: 1 / -1; }
+.text-center { text-align: center; }
+.mt-10 { margin-top: 2.5rem; }
+.text-lg { font-size: 1.125rem; }
+.text-gray-500 { color: #6b7280; }
 
-/* ========================================================= */
-
-:root {
-
-    --primary-red: #d90429; 
-
-    --light-red: #ff5c7c;
-
-    --success-green: #10b981; 
-
-    
-
-    --bg-light: #f3f4f6; 
-
-    --card-light: #ffffff; 
-
-    --text-dark: #333;
-
-    --border-light: #e5e7eb;
-
+/* ========================================= */
+/* أنماط النموذج والعناصر التفاعلية */
+/* ========================================= */
+.input-field { 
+    border: 1px solid #ccc; 
+    padding: 0.75rem; /* تم زيادة البادينغ */
+    border-radius: 6px; /* تم زيادة التقوس */
+    width: 100%; 
+    transition: border-color 0.3s, box-shadow 0.3s; 
+    box-sizing: border-box; /* حاسم لضمان أن العرض 100% يشمل البادينغ */
+}
+.input-field:focus { 
+    border-color: #d90429; 
+    outline: none; 
+    box-shadow: 0 0 0 2px rgba(217, 4, 41, 0.2); 
+}
+.input-label { 
+    display: block; 
+    margin-bottom: 0.5rem; 
+    font-weight: 600; 
+    color: #333; 
+    font-size: 0.875rem; /* text-sm */
 }
 
-body {
-
-    font-family: 'Arial', sans-serif;
-
-    background-color: var(--bg-light);
-
-    color: var(--text-dark);
-
-    direction: rtl;
-
+/* زر الحفظ الرئيسي */
+.main-btn { 
+    background-color: #d90429; /* لون أحمر قوي */
+    color: white; 
+    padding: 0.75rem 1.5rem; 
+    border-radius: 8px; 
+    transition: background-color 0.3s, opacity 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+}
+.main-btn:hover:not(:disabled) { 
+    background-color: #ef233c; 
+}
+.main-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
-/* أنماط حقول الإدخال القياسية */
-
-.input-label {
-
-    display: block;
-
-    font-weight: 600;
-
-    margin-bottom: 0.5rem;
-
-    color: var(--text-dark);
-
+/* ========================================= */
+/* أنماط رسائل الحالة */
+/* ========================================= */
+.error { 
+    color: #d90429; /* أحمر */
+    font-weight: bold; 
+}
+.success { 
+    --success-green: #2a9d8f; /* تعريف متغير للون النجاح */
+    color: var(--success-green); 
+    font-weight: bold; 
+}
+.loading { 
+    color: #f77f00; /* برتقالي */
+    font-weight: bold; 
 }
 
-.input-field {
+/* ========================================= */
+/* أنماط البطاقات (Card View) */
+/* ========================================= */
+.product-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+.product-card .edit-offer-btn {
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
 
+/* ========================================= */
+/* أنماط النافذة المنبثقة (Modal) */
+/* ========================================= */
+.modal { 
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out; 
+    pointer-events: none; /* لتجنب النقر على العناصر خلف الـ Modal */
+}
+.modal:not(.hidden) {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-content { 
+    background-color: white; 
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
     width: 100%;
-
-    /* تم نقل معظم التنسيق إلى HTML و style لضمان التطبيق */
-
-    background-color: white;
-
-    color: var(--text-dark);
-
-    transition: border-color 0.3s ease;
-
+    max-width: 960px; /* max-w-4xl */
+    max-height: 90vh; 
+    overflow-y: auto; 
+    position: relative;
+    padding: 1.5rem;
+}
+.modal-content .close-modal-btn {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
-/* نمط بطاقة لكل قسم (يشمل الأقسام العادية والحجج الإقناعية) */
-
+/* أنماط الحقول الديناميكية (الأقسام والحجج) */
 .dynamic-section-card {
-
-    background-color: var(--card-light);
-
-    border: 1px solid var(--border-light);
-
-    padding: 1rem;
-
-    border-radius: 0.5rem;
-
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-
-    margin-bottom: 1rem;
-
-    transition: all 0.3s ease-out; 
-
-}
-
-.dynamic-section-card h4 {
-
-    color: var(--primary-red);
-
-    font-weight: bold;
-
-    margin-bottom: 0.5rem;
-
-}
-
-/* نمط زر الحذف (مهم لـ JS) */
-
-.delete-section-btn, .delete-argument-btn {
-
-    color: white;
-
-    background-color: #ef4444; /* أحمر حاد للحذف */
-
-    border-radius: 0.25rem;
-
-    padding: 0.25rem 0.5rem;
-
-    font-size: 0.875rem;
-
-    transition: background-color 0.2s;
-
-}
-
-.delete-section-btn:hover, .delete-argument-btn:hover {
-
-    background-color: #dc2626;
-
-}
-
-/* تنسيقات الألوان الرئيسية (للتأكد من عملها إذا لم يعمل المضمن) */
-
-.bg-red-500, #addSectionButton, #addClosingArgumentButton {
-
-    background-color: var(--primary-red);
-
-}
-
-.bg-red-700, #saveOfferButton {
-
-    background-color: #a30322; /* لون أغمق قليلاً للزر النهائي */
-
-}
-
-.text-green-600 {
-
-    color: var(--success-green);
-
+    transition: all 0.2s ease-out;
 }
