@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">صفحة العرض الخاصة</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <style>
+        /* الأنماط المخصصة */
+        body { font-family: 'Arial', sans-serif; background-color: #f4f4f9; }
+        .pitch-container { max-width: 900px; }
+        .cta-button { 
+            background-color: #d90429; 
+            color: white; 
+            transition: background-color 0.3s; 
+            box-shadow: 0 4px 12px rgba(217, 4, 41, 0.4);
+        }
+        .cta-button:hover { background-color: #ef233c; }
+        
+        /* أنماط البطاقات والأقسام */
+        .info-card {
+            background-color: #ffffff;
+            border-right: 4px solid #d90429;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <main class="pitch-container mx-auto py-10 px-4">
+        
+        <div id="statusMessage" class="text-center text-lg text-gray-600 mt-10">
+            <span class="material-symbols-outlined animate-spin text-4xl text-red-600">progress_activity</span>
+            <p class="mt-4">جاري تحميل صفحة العرض... ⏳</p>
+        </div>
+        
+        <div id="pitchContent" class="hidden">
+            
+            <header class="text-center mb-10 p-6 bg-white rounded-xl shadow-lg">
+                <h1 id="pitchTitleDisplay" class="text-4xl font-extrabold text-gray-900 mb-2">عنوان خطاب المبيعات الأساسي</h1>
+                <p id="pitchTaglineDisplay" class="text-xl text-red-600 font-semibold">عبارة تسويقية قصيرة وجذابة</p>
+                <div class="mt-6">
+                    <button id="ctaButtonTop" class="cta-button py-4 px-10 rounded-full text-2xl font-bold w-full md:w-auto hover:scale-105 transition duration-300">
+                        العبارة الافتراضية
+                    </button>
+                </div>
+            </header>
+            
+            <section id="dynamicPitchBody" class="space-y-12">
+                </section>
+            
+            <footer class="text-center mt-12 p-6 bg-white rounded-xl shadow-lg">
+                <button id="ctaButtonBottom" class="cta-button py-4 px-10 rounded-full text-2xl font-bold w-full md:w-auto">
+                    العبارة الافتراضية
+                </button>
+                <p class="text-sm text-gray-500 mt-4">جميع الحقوق محفوظة &copy; مصنع الأمان</p>
+            </footer>
+            
+        </div>
+        
+    </main>
+
+    <script type="module" src="DealCloser.js"></script>
+</body>
+</html>
