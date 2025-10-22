@@ -98,23 +98,23 @@ function applyTheme() {
     modeToggleIcon.textContent = isDarkMode ? 'dark_mode' : 'light_mode';
 }
 
-// دالة لتحديث الرابط الديناميكي لزر الانتقال لصفحة العرض 
-function updateCheckoutButton(productId) {
-    if (!checkoutButton || !productId) {
-        // إخفاء الزر إذا لم يتوفر معرف المنتج أو الزر نفسه
+// 🔴 التعديل هنا: الدالة الآن تستقبل pitchId مباشرة
+function updateCheckoutButton(pitchId) {
+    if (!checkoutButton || !pitchId) {
+        // إخفاء الزر إذا لم يتوفر معرّف العرض
         if (checkoutButton) {
             checkoutButton.style.display = 'none'; 
         }
         return;
     }
     
-    // بناء الرابط
-    const checkoutUrl = `checkout.html?id=${productId}`;
+    // بناء الرابط لصفحة العرض DealCloser.html
+    const pitchUrl = `DealCloser.html?pitchId=${pitchId}`;
 
-    checkoutButton.href = checkoutUrl;
+    checkoutButton.href = pitchUrl;
     // استخدام inline-flex ليتناسب مع التوسيط الدائري
     checkoutButton.style.display = 'inline-flex'; 
-    console.log(`تم ربط زر العرض بنجاح: ${checkoutUrl}`);
+    console.log(`تم ربط زر العرض بنجاح: ${pitchUrl}`);
 }
 
 // دالة تشغيل دائرة تبديل الأيقونات بشكل مستمر
@@ -182,7 +182,7 @@ function startIconCycle() {
 }
 
 
-// دالة لجلب وعرض خطاب المبيعات
+// 🔴 التعديل هنا: ضمان جلب الـ pitchId من وثيقة dynamicDetailsSnap
 async function fetchAndDisplaySalesPitch(productId) {
     if (!currentUserId || !productId) {
         updateCheckoutButton(null); 
@@ -194,6 +194,9 @@ async function fetchAndDisplaySalesPitch(productId) {
     loadingMessage.classList.remove('hidden');
     errorMessage.classList.add('hidden');
     productDetailsContent.classList.add('hidden');
+    
+    let pitchIdentifier = null; // المعرّف الجديد لصفحة العرض
+
     try {
         const productDocRef = doc(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/products`, productId);
         const productSnap = await getDoc(productDocRef);
@@ -208,11 +211,17 @@ async function fetchAndDisplaySalesPitch(productId) {
         pitchTitleElement.textContent = pitchData.name || 'خطاب مبيعات غير معروف';
         pitchTaglineElement.textContent = pitchData.description || 'لا يوجد عبارة تسويقية.';
 
+        // 1. جلب وثيقة productDetails (التي تحتوي على الـ pitchId)
         const dynamicDetailsDocRef = doc(db, `artifacts/${firebaseConfig.appId}/users/${currentUserId}/productDetails`, productId);
         const dynamicDetailsSnap = await getDoc(dynamicDetailsDocRef);
         dynamicSectionsContainer.innerHTML = '';
+        
         if (dynamicDetailsSnap.exists()) {
             const dynamicData = dynamicDetailsSnap.data();
+            
+            // 2. قراءة الـ pitchId الحقيقي الذي تم حفظه في الخطوة 1
+            pitchIdentifier = dynamicData.pitchId;
+            
             const sections = dynamicData.sections || [];
             sections.sort((a, b) => (a.order || 0) - (b.order || 0));
             sections.forEach(section => {
@@ -293,7 +302,8 @@ async function fetchAndDisplaySalesPitch(productId) {
             dynamicSectionsContainer.appendChild(noDynamicSectionsMessage);
         }
         
-        updateCheckoutButton(productId); 
+        // 3. تمرير pitchId الذي تم جلبه إلى دالة تحديث الزر
+        updateCheckoutButton(pitchIdentifier); 
         startIconCycle(); // 👈 تشغيل الدائرة الجديدة
         
         loadingMessage.classList.add('hidden');
